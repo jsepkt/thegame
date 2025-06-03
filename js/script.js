@@ -145,7 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const characterId = cardWrapper.dataset.characterId;
                 if (characterId) {
                     const progressBarContainer = cardWrapper.querySelector('.character-card-progress-bar-container');
-                    if (progressBarContainer) progressBarContainer.style.display = 'block'; // Show containers always
+                    if (progressBarContainer) progressBarContainer.style.display = 'block';
                     listenForMiniProgressBarUpdates(characterId, cardWrapper);
                 }
             });
@@ -336,7 +336,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 let percentage = (votes / maxExpectedVotes) * 100;
                 percentage = Math.min(Math.max(percentage, 0), 100);
                 progressBar.style.width = `${percentage}%`;
-                 // Ensure container is visible if it was hidden initially via HTML style attr
                 if (progressBarContainer.style.display === 'none') {
                      progressBarContainer.style.display = 'block';
                 }
@@ -347,7 +346,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function listenForMiniProgressBarUpdates(characterId, cardWrapper) {
         if (!db || !characterId || !cardWrapper) return;
         const characterRef = db.collection('character_votes').doc(characterId);
-        characterRef.onSnapshot(doc => { // No need to store this unsubscribe unless we need to stop it specifically
+        characterRef.onSnapshot(doc => {
             let votes = 0;
             if (doc.exists && doc.data() && doc.data().votes !== undefined) {
                 votes = doc.data().votes;
@@ -449,7 +448,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     } else { console.warn("DEBUG: Newsletter form not found."); }
 
-
     // --- Event Listeners Setup ---
     if (enterIslandCTA) enterIslandCTA.addEventListener('click', () => { if (isAgeVerified) enterTheIsland(); else openAgeGate(); });
     if (ageConfirmYesBtn) ageConfirmYesBtn.addEventListener('click', () => handleAgeConfirmation(true));
@@ -459,13 +457,16 @@ document.addEventListener('DOMContentLoaded', () => {
     
     characterCardWrappers.forEach(cardWrapper => {
         cardWrapper.addEventListener('click', (e) => {
-            if (e.target.closest('button.character-reveal-btn')) { // Only trigger if button itself is clicked or is an ancestor
-                 e.stopPropagation(); // Prevent card click if button is separate (it is)
-                 const characterId = cardWrapper.dataset.characterId;
-                 if (characterId) openCharacterModal(characterId);
-            } else if (e.target.closest('.character-card-front')) { // Allow click on front to open modal
-                 const characterId = cardWrapper.dataset.characterId;
-                 if (characterId) openCharacterModal(characterId);
+            // Only open modal if the click target isn't a button INSIDE the card itself (if any were added)
+            // For now, any click on the card wrapper (excluding internal buttons if they existed) opens modal.
+            // The .character-reveal-btn is INSIDE .character-card-back, which is display:none
+            // So, this simpler listener on the wrapper is fine.
+            const characterId = cardWrapper.dataset.characterId;
+            console.log("DEBUG: Character card wrapper clicked. ID:", characterId);
+            if (characterId) {
+                openCharacterModal(characterId);
+            } else {
+                console.error("DEBUG: Character ID not found on card wrapper:", cardWrapper);
             }
         });
     });
@@ -476,6 +477,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (modalCharacterHiddenTrait && modalCharacterHiddenTrait.style.display === 'none') {
                 modalCharacterHiddenTrait.style.display = 'block';
                 revealTraitBtn.style.display = 'none';
+                console.log("DEBUG: Hidden trait revealed for:", currentOpenCharacterId);
             }
         });
     }
