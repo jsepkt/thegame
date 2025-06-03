@@ -5,6 +5,7 @@
   "hints": {
     "compat-api/html": "off",
     "no-inline-styles": "off",
-    "button-type": "off"
+    "button-type": "off",
+    "compat-api/css": "off"
   }
 }

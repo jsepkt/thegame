@@ -54,7 +54,7 @@ body.preload * {
 }
 
 /* === TYPOGRAPHY & LINKS === */
-h1, h2, h3, .section-title {
+h1, h2, h3, .section-title { /* .section-title class added for consistency */
     font-family: var(--font-accent); /* Special Elite for headings */
     color: var(--color-light);
     font-weight: normal;
@@ -79,7 +79,7 @@ h1, h2, h3, .section-title {
     75% { text-shadow: 0 0 8px var(--color-blood-highlight), 0 0 20px var(--color-blood-red), 3px 3px 3px var(--color-darkest), 0 0 2px var(--color-light); }
 }
 
-.section-title {
+.section-title { /* Applied to h2 in sections if not using .visually-hidden */
     font-size: 2.2rem;
     text-align: center;
     margin-bottom: 3rem;
@@ -172,8 +172,8 @@ a:hover {
     letter-spacing: 2px;
     cursor: pointer;
     position: relative;
-    transition: color 0.4s ease, border-color 0.4s ease, transform 0.2s ease;
-    overflow: hidden; /* For pseudo-elements if used for advanced hover */
+    transition: color 0.4s ease, border-color 0.4s ease, transform 0.2s ease, box-shadow 0.4s ease;
+    overflow: hidden;
 }
 .cta-button:hover {
     color: var(--color-light);
@@ -182,7 +182,7 @@ a:hover {
     box-shadow: 0 0 10px var(--color-blood-red);
 }
 .cta-button.disabled,
-#enter-island-cta.button-entered { /* Style for when island is entered */
+#enter-island-cta.button-entered {
     opacity: 0.5;
     border-color: var(--color-medium-dark);
     color: var(--color-medium-dark);
@@ -190,7 +190,7 @@ a:hover {
     transform: translateY(0);
     box-shadow: none;
 }
-.cta-button.disabled .cta-text,
+.cta-button.disabled .cta-text, /* Ensure .cta-text exists in button if this is used */
 #enter-island-cta.button-entered .cta-text {
     text-decoration: line-through;
 }
@@ -199,7 +199,7 @@ a:hover {
 #main-content {
     display: none;
     opacity: 0;
-    transition: opacity 1s ease-in-out 0.3s; /* Delay slightly for smoother feel after modal */
+    transition: opacity 1s ease-in-out 0.3s;
 }
 #main-content.visible {
     display: block;
@@ -210,7 +210,7 @@ a:hover {
 .modal-overlay-container {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
-    background-color: rgba(1, 1, 2, 0.95); /* Almost opaque dark */
+    background-color: rgba(1, 1, 2, 0.95);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -222,30 +222,30 @@ a:hover {
 .modal-overlay-container.visible {
     opacity: 1;
     visibility: visible;
-    transition-delay: 0s;
+    transition-delay: 0s; /* Ensure it becomes visible immediately when class is added */
 }
 .modal-content-box {
     background-color: var(--color-dark);
     padding: 2.5rem 3rem;
-    border-radius: 3px; /* Sharper edges */
+    border-radius: 3px;
     text-align: center;
     max-width: 500px;
     width: calc(100% - 40px);
     border: 1px solid var(--color-blood-red);
     box-shadow: 0 0 30px rgba(128,0,0,0.4), inset 0 0 10px rgba(10,10,15,0.5);
     transform: scale(0.95);
-    transition: transform 0.4s 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Slight bounce in */
+    transition: transform 0.4s 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 .modal-overlay-container.visible .modal-content-box {
     transform: scale(1);
 }
-.modal-title-text { /* h2 */
-    font-family: var(--font-horror); /* Creepster */
+.modal-title-text {
+    font-family: var(--font-horror);
     color: var(--color-blood-highlight);
     font-size: 2.5rem;
     margin-bottom: 1rem;
 }
-.modal-body-text { /* p */
+.modal-body-text {
     font-family: var(--font-primary);
     color: var(--color-light-muted);
     font-size: 1rem;
@@ -257,8 +257,9 @@ a:hover {
     flex-direction: column;
     gap: 1rem;
 }
-.modal-action-button { /* Inherits .cta-button, specific modal overrides */
+.modal-action-button {
     width: 100%;
+    /* Inherits .cta-button styles */
 }
 .modal-action-button.secondary-action {
     border-color: var(--color-knife-grey);
@@ -272,20 +273,18 @@ a:hover {
 
 /* === STORY SECTION (CARDS) === */
 .story-section {
-    padding: 4rem 0; /* Top/bottom padding */
+    padding: 4rem 0;
     background-color: var(--color-dark);
-    /* border-top: 1px solid var(--color-medium-dark); */
 }
-.story-title {
+.story-title { /* This is an h2 with .section-title */
     color: var(--color-knife-grey);
     font-size: 1.8rem;
     letter-spacing: 2px;
 }
 .story-cards-viewport {
     width: 100%;
-    overflow-x: auto; /* Horizontal scroll */
-    -webkit-overflow-scrolling: touch; /* Smooth scroll iOS */
-    padding: 1rem 0; /* Space for scrollbar and card hover effects */
+    overflow-x: auto;
+    padding: 1rem 0;
     margin-bottom: 1.5rem;
     scrollbar-width: thin;
     scrollbar-color: var(--color-medium-dark) var(--color-darkest);
@@ -297,13 +296,13 @@ a:hover {
 
 .story-cards-container {
     display: flex;
-    gap: 1.5rem; /* Space between cards */
-    padding: 1rem 2rem; /* Padding for first/last card visibility from edge */
-    width: max-content; /* Allow container to grow with cards */
+    gap: 1.5rem;
+    padding: 1rem 2rem; /* Allows cards at ends to be centered better */
+    width: max-content;
 }
 .story-card {
-    flex: 0 0 300px; /* Card width: Don't grow, don't shrink, base width 300px */
-    height: 420px; /* Card height */
+    flex: 0 0 300px;
+    height: 420px;
     background-color: var(--color-medium-dark);
     border: 1px solid var(--color-knife-grey);
     border-radius: 4px;
@@ -323,13 +322,11 @@ a:hover {
     box-shadow: 0 8px 20px rgba(0,0,0,0.6), 0 0 15px var(--color-blood-red);
     border-color: var(--color-blood-red);
 }
-.story-card::before { /* Overlay for background image */
+.story-card::before {
     content: '';
     position: absolute;
     top: 0; left: 0; width: 100%; height: 100%;
-    background-color: rgba(10, 10, 15, 0.7); /* Darkening overlay */
-    /* background-image: var(--texture-noise); */ /* Optional texture on card overlay */
-    /* opacity: 0.1; */
+    background-color: rgba(10, 10, 15, 0.7);
     transition: background-color 0.4s ease;
 }
 .story-card:hover::before {
@@ -350,7 +347,7 @@ a:hover {
     text-shadow: 1px 1px 1px var(--color-darkest);
 }
 .story-card-main-text.emphasis {
-    font-family: var(--font-accent); /* Special Elite */
+    font-family: var(--font-accent);
     font-size: 1.5rem;
     color: var(--color-light);
     letter-spacing: 1px;
@@ -364,7 +361,7 @@ a:hover {
     background-color: rgba(0,0,0,0.2);
 }
 .story-card-quote-text {
-    font-family: var(--font-accent); /* Special Elite */
+    font-family: var(--font-accent);
     font-style: italic;
     font-size: 1.2rem;
     color: var(--color-blood-highlight);
@@ -409,149 +406,63 @@ a:hover {
     font-style: italic;
 }
 
-/* === PLACEHOLDER SECTIONS === */
-.placeholder-section {
-    min-height: 40vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-top: 1px solid var(--color-medium-dark);
-}
-.placeholder-section h2 {
-    color: var(--color-knife-grey);
-    opacity: 0.5;
-}
-
-/* === FOOTER === */
-#site-footer {
-    padding: 2rem 1rem;
-    text-align: center;
-    font-size: 0.85rem;
-    color: var(--color-knife-grey);
-    border-top: 1px solid var(--color-medium-dark);
+/* === CHARACTERS SECTION === */
+.characters-section {
+    padding: 4rem 1rem;
     background-color: var(--color-dark);
 }
-#site-footer p { margin: 0.3rem 0; }
-
-/* === UTILITY CLASSES === */
-.visually-hidden {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
-}
-
-/* === RESPONSIVE ADJUSTMENTS === */
-@media (max-width: 768px) {
-    #hero-title { font-size: clamp(2.5rem, 12vw, 4.5rem); }
-    .section-title { font-size: 1.8rem; }
-    .story-card { flex-basis: 260px; height: 380px; } /* Smaller cards on mobile */
-    .story-card-main-text.emphasis { font-size: 1.3rem; }
-    .story-card-quote-text { font-size: 1.1rem; }
-    .modal-content-box { padding: 2rem 1.5rem; }
-    .modal-title-text { font-size: 2rem; }
-}
-
-/* css/style.css */
-/* ... (Keep all existing CSS from FRESH START - STEP 2) ... */
-
-
-/* === 3. CHARACTERS SECTION === */
-.characters-section {
-    padding: 4rem 1rem; /* Adjusted padding */
-    background-color: var(--color-dark); /* Match story section bg */
-    /* border-top: 1px solid var(--color-medium-dark); Already handled by .content-section */
-}
-
-.characters-title { /* h2 for this section */
+.characters-title { /* h2 */
     color: var(--color-knife-highlight);
     text-shadow: 1px 1px 0 var(--color-darkest), 0 0 10px var(--color-knife-grey);
     margin-bottom: 3rem;
 }
-
 .characters-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* Responsive grid */
-    gap: 2rem; /* Increased gap */
-    max-width: 1400px; /* Control max width of grid */
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 2rem;
+    max-width: 1400px;
     margin: 0 auto;
 }
-
 .character-card-wrapper {
-    perspective: 1000px; /* For 3D flip effect if used */
+    perspective: 1000px;
 }
-
 .character-card {
     background-color: var(--color-medium-dark);
     border: 1px solid var(--color-knife-grey);
     border-radius: 4px;
     box-shadow: 0 3px 8px rgba(0,0,0,0.4), inset 0 0 3px rgba(0,0,0,0.2);
     position: relative;
-    /* For flip effect, uncomment below:
-    transform-style: preserve-3d;
-    transition: transform 0.7s cubic-bezier(0.4, 0.2, 0.2, 1);
-    */
     cursor: pointer;
-    overflow: hidden; /* Clip overflowing elements like tilted name */
-    aspect-ratio: 3 / 4; /* Maintain a portrait-like aspect ratio */
-    display: flex; /* To help center front content if needed */
+    overflow: hidden;
+    aspect-ratio: 3 / 4;
+    display: flex;
     flex-direction: column;
     transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
-
 .character-card:hover {
     transform: translateY(-5px) scale(1.03);
     box-shadow: 0 6px 15px rgba(0,0,0,0.5), 0 0 15px var(--color-blood-red);
     border-color: var(--color-blood-red);
 }
-
-/* For flip effect:
-.character-card-wrapper:hover .character-card {
-    transform: rotateY(180deg);
-}
-*/
-
 .character-card-front,
-.character-card-back {
-    /* For flip effect:
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    backface-visibility: hidden;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 1rem;
-    */
+.character-card-back { /* .character-card-back primarily for JS data, not visual flip */
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-end; /* Align name to bottom */
+    justify-content: flex-end;
     padding: 1rem;
     text-align: center;
 }
-
-.character-card-front {
-    /* background-color: var(--color-medium-dark); /* if not transparent for image */
-}
+.character-card-back { display: none; } /* Hide the back content on the card itself */
 
 .character-portrait {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Cover the card area */
-    opacity: 0.6; /* Make portrait slightly faded, text will be on top */
-    filter: grayscale(50%) contrast(1.1) sepia(20%); /* Haunted look */
+    top: 0; left: 0; width: 100%; height: 100%;
+    object-fit: cover;
+    opacity: 0.6;
+    filter: grayscale(50%) contrast(1.1) sepia(20%);
     transition: opacity 0.4s ease, filter 0.4s ease;
     z-index: 0;
 }
@@ -559,104 +470,68 @@ a:hover {
     opacity: 0.4;
     filter: grayscale(20%) contrast(1) sepia(10%);
 }
-
-
 .character-name-preview {
-    font-family: var(--font-accent); /* Special Elite */
+    font-family: var(--font-accent);
     font-size: 1.3rem;
     color: var(--color-light);
-    background-color: rgba(10,10,15, 0.7); /* Dark bar for name */
+    background-color: rgba(10,10,15, 0.7);
     padding: 0.5rem 1rem;
     width: 100%;
     box-sizing: border-box;
-    margin: 0; /* Reset margin for h3 */
-    position: relative; /* Above portrait */
+    margin: 0;
+    position: relative;
     z-index: 1;
     text-shadow: 1px 1px 2px var(--color-darkest);
 }
 
-/* Styles for back of card (if using flip) or content revealed before modal */
-.character-card-back {
-    /* For flip: transform: rotateY(180deg); */
-    /* background-color: var(--color-dark); */
-    justify-content: center; /* Center content on back */
-    display: none; /* Initially hidden if not using flip, JS will show/hide or modal used */
-}
-.character-name-detail {
-    font-family: var(--font-horror); /* Creepster for impact */
-    font-size: 1.8rem;
-    color: var(--color-blood-highlight);
-    margin-bottom: 0.5rem;
-}
-.character-archetype {
-    font-family: var(--font-primary);
-    font-size: 0.9rem;
-    color: var(--color-knife-grey);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 1rem;
-}
-.character-reveal-btn { /* Reuses .cta-button styles but can be more specific */
-    font-size: 0.8rem !important; /* Smaller button */
-    padding: 0.5em 1em !important;
-    border-width: 1px !important;
-    letter-spacing: 1px !important;
-    margin-top: auto; /* Push to bottom if flex column */
-}
-
-
 /* Character Detail Modal Styles */
-.character-detail-modal { /* Specific class for the character modal overlay */
-    /* Inherits .modal-overlay-container styles */
-}
-.character-modal-content { /* Specific class for the character modal box */
-    /* Inherits .modal-content-box styles */
-    max-width: 700px; /* Wider for character details */
-    min-height: 500px; /* Ensure enough space */
-    padding-top: 3.5rem; /* Space for close button */
-    text-align: left; /* Align text left in modal */
+.character-detail-modal .modal-content-box {
+    max-width: 700px; /* Can be wider for more content */
+    min-height: 500px;
+    padding-top: 3.5rem; /* Account for close button */
+    text-align: left;
 }
 .modal-close-btn {
     position: absolute;
-    top: 10px;
-    right: 15px;
-    background: none;
-    border: none;
+    top: 10px; right: 15px;
+    background: none; border: none;
     font-family: var(--font-horror);
     font-size: 2.5rem;
     color: var(--color-knife-grey);
     cursor: pointer;
     transition: color 0.3s ease, transform 0.3s ease;
-    line-height: 1;
-    padding: 0.2rem;
+    line-height: 1; padding: 0.2rem;
 }
 .modal-close-btn:hover {
     color: var(--color-blood-red);
     transform: rotate(90deg) scale(1.1);
 }
-
 .character-modal-body {
     display: grid;
-    grid-template-columns: 200px 1fr; /* Image column and text column */
+    grid-template-columns: 220px 1fr;
     gap: 2rem;
     align-items: flex-start;
 }
+.character-modal-text-content { /* New wrapper for text part of the grid */
+    display: flex;
+    flex-direction: column;
+}
 .modal-character-image-display {
     width: 100%;
-    max-width: 200px;
+    max-width: 220px;
     height: auto;
     object-fit: cover;
     border: 2px solid var(--color-knife-grey);
     filter: sepia(20%) contrast(1.1);
 }
-.modal-character-name-display { /* h2 in modal */
+.modal-character-name-display {
     font-family: var(--font-horror);
     font-size: 2.5rem;
     color: var(--color-blood-highlight);
     margin-bottom: 0.5rem;
     line-height: 1.1;
 }
-.modal-character-archetype-display { /* p */
+.modal-character-archetype-display {
     font-family: var(--font-accent);
     font-size: 1.1rem;
     color: var(--color-knife-grey);
@@ -664,7 +539,7 @@ a:hover {
     letter-spacing: 1px;
     margin-bottom: 1.5rem;
 }
-.modal-character-bio-display { /* p */
+.modal-character-bio-display {
     font-family: var(--font-primary);
     font-weight: 300;
     font-size: 1rem;
@@ -676,15 +551,14 @@ a:hover {
     margin-top: 1.5rem;
     padding-top: 1.5rem;
     border-top: 1px dashed var(--color-medium-dark);
-    grid-column: 1 / -1; /* Span both columns */
+    grid-column: 1 / -1; /* Span both columns if inside grid */
 }
-.trait-reveal-button { /* .cta-button */
+.trait-reveal-button {
     display: block;
     margin: 0 auto 1rem auto;
     font-size: 0.9rem !important;
-    /* Other .cta-button styles apply */
 }
-.modal-character-hidden-trait-display { /* p */
+.modal-character-hidden-trait-display {
     font-family: var(--font-accent);
     font-size: 1rem;
     color: var(--color-blood-red);
@@ -695,19 +569,225 @@ a:hover {
     text-shadow: 1px 1px 1px var(--color-darkest);
 }
 
+/* Character Card - Mini Progress Bar */
+.character-card-progress-bar-container {
+    width: 80%;
+    height: 8px;
+    background-color: var(--color-medium-dark);
+    border: 1px solid var(--color-knife-grey);
+    border-radius: 4px;
+    margin: 0.5rem auto 0.8rem auto;
+    overflow: hidden;
+    /* display: none; Initially hidden by HTML style, JS will show */
+}
+.character-card-progress-bar {
+    height: 100%;
+    background-color: var(--color-blood-red);
+    width: 0%;
+    transition: width 0.5s ease-in-out;
+}
+
+/* Character Modal - New Sections (Voting, Progress, AI) */
+.survival-progress-section {
+    margin: 1.5rem 0;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px dashed var(--color-medium-dark);
+}
+.survival-progress-section h4 {
+    font-family: var(--font-accent);
+    color: var(--color-knife-grey);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+}
+.progress-bar-container.modal-progress-bar-container {
+    width: 100%;
+    height: 18px;
+    background-color: rgba(0,0,0,0.3);
+    border: 1px solid var(--color-knife-grey);
+    border-radius: 3px;
+    position: relative;
+    overflow: hidden;
+}
+.progress-bar.modal-progress-bar {
+    height: 100%;
+    background-color: var(--color-blood-highlight);
+    width: 0%;
+    transition: width 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.3);
+}
+.progress-percentage {
+    position: absolute;
+    left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    font-family: var(--font-primary);
+    font-weight: 700;
+    font-size: 0.75rem;
+    color: var(--color-light);
+    text-shadow: 1px 1px 1px var(--color-darkest);
+}
+.character-vote-section {
+    margin: 1.5rem 0;
+    padding: 1.5rem 0;
+    border-bottom: 1px dashed var(--color-medium-dark);
+    text-align: center;
+}
+.vote-button {
+    padding: 0.6em 1.2em !important;
+    font-size: 0.9rem !important;
+    background-color: rgba(128,0,0,0.3) !important;
+    border-color: var(--color-blood-red) !important;
+    color: var(--color-blood-highlight) !important;
+}
+.vote-button:hover {
+    background-color: rgba(128,0,0,0.5) !important;
+    border-color: var(--color-blood-highlight) !important;
+    color: var(--color-light) !important;
+}
+.vote-button i { margin-right: 0.5em; }
+.vote-count {
+    font-family: var(--font-primary);
+    color: var(--color-light-muted);
+    font-size: 0.9rem;
+    margin-top: 0.75rem;
+}
+#modal-character-vote-count {
+    font-weight: 700;
+    color: var(--color-light);
+}
+.character-ai-chat-section { margin-top: 1.5rem; }
+.character-ai-chat-section h4 {
+    font-family: var(--font-accent);
+    color: var(--color-knife-grey);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.75rem;
+}
+.ai-chat-output-area {
+    height: 150px;
+    background-color: rgba(0,0,0,0.3);
+    border: 1px solid var(--color-medium-dark);
+    border-radius: 3px;
+    padding: 0.75rem;
+    overflow-y: auto;
+    margin-bottom: 0.75rem;
+    font-family: var(--font-primary);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-medium-dark) var(--color-darkest);
+}
+.ai-chat-output-area::-webkit-scrollbar { width: 6px; }
+.ai-chat-output-area::-webkit-scrollbar-track { background: var(--color-darkest); }
+.ai-chat-output-area::-webkit-scrollbar-thumb { background-color: var(--color-medium-dark); border-radius: 3px; }
+.ai-chat-output-area .ai-system-message {
+    color: var(--color-knife-grey);
+    font-style: italic;
+    opacity: 0.7;
+}
+.ai-chat-output-area .user-message,
+.ai-chat-output-area .ai-response-message {
+    margin-bottom: 0.5rem;
+    padding: 0.3rem 0.5rem;
+    border-radius: 3px;
+}
+.ai-chat-output-area .user-message {
+    text-align: right;
+    color: var(--color-light);
+}
+.ai-chat-output-area .ai-response-message {
+    color: var(--color-blood-highlight);
+}
+.ai-chat-input-area {
+    display: flex;
+    gap: 0.5rem;
+}
+#ai-chat-input {
+    flex-grow: 1;
+    padding: 0.6rem 0.8rem;
+    background-color: rgba(0,0,0,0.2);
+    border: 1px solid var(--color-medium-dark);
+    border-radius: 3px;
+    color: var(--color-light);
+    font-family: var(--font-primary);
+    font-size: 0.9rem;
+}
+#ai-chat-input:focus {
+    outline: none;
+    border-color: var(--color-blood-red);
+    box-shadow: 0 0 5px var(--color-blood-red);
+}
+.ai-send-button {
+    padding: 0.6em 1em !important;
+    font-size: 0.9rem !important;
+    flex-shrink: 0;
+}
+
+/* === PLACEHOLDER SECTIONS === */
+.placeholder-section {
+    min-height: 40vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* border-top: 1px solid var(--color-medium-dark); /* Removed, content-section handles it */
+}
+.placeholder-section h2 { /* .section-title class used in HTML for these */
+    color: var(--color-knife-grey);
+    opacity: 0.5;
+}
+
+/* === FOOTER === */
+#site-footer {
+    padding: 2rem 1rem;
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--color-knife-grey);
+    /* border-top: 1px solid var(--color-medium-dark); /* content-section handles border */
+    background-color: var(--color-dark);
+}
+#site-footer p { margin: 0.3rem 0; }
+#site-footer a { color: var(--color-knife-grey); }
+#site-footer a:hover { color: var(--color-light-muted); text-shadow: none; }
+
+
+/* === UTILITY CLASSES === */
+.visually-hidden {
+    position: absolute;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* === RESPONSIVE ADJUSTMENTS === */
 @media (max-width: 768px) {
+    #hero-title { font-size: clamp(2.5rem, 12vw, 4.5rem); }
+    .section-title { font-size: 1.8rem; }
+    
+    .story-card { flex-basis: 260px; height: 380px; }
+    .story-card-main-text.emphasis { font-size: 1.3rem; }
+    .story-card-quote-text { font-size: 1.1rem; }
+    
+    .modal-content-box { padding: 2rem 1.5rem; }
+    .modal-title-text { font-size: 2rem; }
+
     .characters-grid {
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Smaller cards */
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
         gap: 1.5rem;
     }
     .character-modal-body {
-        grid-template-columns: 1fr; /* Stack image and text on mobile */
+        grid-template-columns: 1fr;
         text-align: center;
     }
     .modal-character-image-display {
-        margin: 0 auto 1.5rem auto; /* Center image */
+        margin: 0 auto 1.5rem auto;
     }
     .modal-character-name-display, .modal-character-archetype-display {
         text-align: center;
     }
+    .modal-character-name-display { font-size: 2rem; }
 }
