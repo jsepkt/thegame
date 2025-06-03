@@ -288,3 +288,114 @@ a:hover {
     opacity: 0;
     transition: opacity 0.5s ease;
 }
+
+/* css/style.css */
+
+/* ... (existing styles) ... */
+
+/* Age Gate Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85); /* Darker overlay */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000; /* Ensure it's on top */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease, visibility 0s linear 0.5s;
+}
+
+.modal-overlay.visible {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.5s ease;
+}
+
+.modal-content {
+    background-color: #1a1a1a; /* Dark background for the modal box */
+    padding: 30px 40px;
+    border-radius: 5px;
+    text-align: center;
+    max-width: 500px;
+    width: 90%;
+    border: 1px solid #333;
+    box-shadow: 0 0 25px rgba(255, 51, 51, 0.2); /* Subtle red glow */
+    transform: scale(0.9);
+    transition: transform 0.4s ease;
+}
+
+.modal-overlay.visible .modal-content {
+    transform: scale(1);
+}
+
+.modal-content h2 {
+    color: #ff4d4d; /* Red accent for modal title */
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+}
+
+.modal-content p {
+    margin-bottom: 20px;
+    color: #ccc;
+    font-size: 1rem;
+    line-height: 1.7;
+}
+
+.modal-actions {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column; /* Stack buttons on small screens */
+    gap: 15px;
+}
+
+.modal-button {
+    width: 100%; /* Make buttons full width within modal actions */
+    padding: 12px 20px;
+    font-size: 1rem;
+}
+
+.modal-button.secondary {
+    background-color: #444;
+    border-color: #555;
+}
+
+.modal-button.secondary:hover {
+    background-color: #333;
+    border-color: #444;
+    box-shadow: 0 0 10px rgba(100,100,100,0.3);
+}
+
+/* Make buttons side-by-side on larger screens */
+@media (min-width: 480px) {
+    .modal-actions {
+        flex-direction: row;
+        justify-content: center;
+    }
+    .modal-button {
+        width: auto; /* Allow buttons to size to content */
+    }
+}
+
+
+/* Main content visibility - ensure this is still here */
+#main-content {
+    display: none;
+    opacity: 0;
+    transition: opacity 1.5s ease-in-out;
+}
+
+#main-content.visible {
+    display: block;
+    opacity: 1;
+}
+
+/* Optional: Class to hide scroll indicator once content is shown */
+.hero-section.content-revealed .scroll-indicator {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
