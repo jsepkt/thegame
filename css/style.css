@@ -456,3 +456,258 @@ a:hover {
     .modal-content-box { padding: 2rem 1.5rem; }
     .modal-title-text { font-size: 2rem; }
 }
+
+/* css/style.css */
+/* ... (Keep all existing CSS from FRESH START - STEP 2) ... */
+
+
+/* === 3. CHARACTERS SECTION === */
+.characters-section {
+    padding: 4rem 1rem; /* Adjusted padding */
+    background-color: var(--color-dark); /* Match story section bg */
+    /* border-top: 1px solid var(--color-medium-dark); Already handled by .content-section */
+}
+
+.characters-title { /* h2 for this section */
+    color: var(--color-knife-highlight);
+    text-shadow: 1px 1px 0 var(--color-darkest), 0 0 10px var(--color-knife-grey);
+    margin-bottom: 3rem;
+}
+
+.characters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* Responsive grid */
+    gap: 2rem; /* Increased gap */
+    max-width: 1400px; /* Control max width of grid */
+    margin: 0 auto;
+}
+
+.character-card-wrapper {
+    perspective: 1000px; /* For 3D flip effect if used */
+}
+
+.character-card {
+    background-color: var(--color-medium-dark);
+    border: 1px solid var(--color-knife-grey);
+    border-radius: 4px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.4), inset 0 0 3px rgba(0,0,0,0.2);
+    position: relative;
+    /* For flip effect, uncomment below:
+    transform-style: preserve-3d;
+    transition: transform 0.7s cubic-bezier(0.4, 0.2, 0.2, 1);
+    */
+    cursor: pointer;
+    overflow: hidden; /* Clip overflowing elements like tilted name */
+    aspect-ratio: 3 / 4; /* Maintain a portrait-like aspect ratio */
+    display: flex; /* To help center front content if needed */
+    flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.character-card:hover {
+    transform: translateY(-5px) scale(1.03);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.5), 0 0 15px var(--color-blood-red);
+    border-color: var(--color-blood-red);
+}
+
+/* For flip effect:
+.character-card-wrapper:hover .character-card {
+    transform: rotateY(180deg);
+}
+*/
+
+.character-card-front,
+.character-card-back {
+    /* For flip effect:
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    */
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end; /* Align name to bottom */
+    padding: 1rem;
+    text-align: center;
+}
+
+.character-card-front {
+    /* background-color: var(--color-medium-dark); /* if not transparent for image */
+}
+
+.character-portrait {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Cover the card area */
+    opacity: 0.6; /* Make portrait slightly faded, text will be on top */
+    filter: grayscale(50%) contrast(1.1) sepia(20%); /* Haunted look */
+    transition: opacity 0.4s ease, filter 0.4s ease;
+    z-index: 0;
+}
+.character-card:hover .character-portrait {
+    opacity: 0.4;
+    filter: grayscale(20%) contrast(1) sepia(10%);
+}
+
+
+.character-name-preview {
+    font-family: var(--font-accent); /* Special Elite */
+    font-size: 1.3rem;
+    color: var(--color-light);
+    background-color: rgba(10,10,15, 0.7); /* Dark bar for name */
+    padding: 0.5rem 1rem;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0; /* Reset margin for h3 */
+    position: relative; /* Above portrait */
+    z-index: 1;
+    text-shadow: 1px 1px 2px var(--color-darkest);
+}
+
+/* Styles for back of card (if using flip) or content revealed before modal */
+.character-card-back {
+    /* For flip: transform: rotateY(180deg); */
+    /* background-color: var(--color-dark); */
+    justify-content: center; /* Center content on back */
+    display: none; /* Initially hidden if not using flip, JS will show/hide or modal used */
+}
+.character-name-detail {
+    font-family: var(--font-horror); /* Creepster for impact */
+    font-size: 1.8rem;
+    color: var(--color-blood-highlight);
+    margin-bottom: 0.5rem;
+}
+.character-archetype {
+    font-family: var(--font-primary);
+    font-size: 0.9rem;
+    color: var(--color-knife-grey);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 1rem;
+}
+.character-reveal-btn { /* Reuses .cta-button styles but can be more specific */
+    font-size: 0.8rem !important; /* Smaller button */
+    padding: 0.5em 1em !important;
+    border-width: 1px !important;
+    letter-spacing: 1px !important;
+    margin-top: auto; /* Push to bottom if flex column */
+}
+
+
+/* Character Detail Modal Styles */
+.character-detail-modal { /* Specific class for the character modal overlay */
+    /* Inherits .modal-overlay-container styles */
+}
+.character-modal-content { /* Specific class for the character modal box */
+    /* Inherits .modal-content-box styles */
+    max-width: 700px; /* Wider for character details */
+    min-height: 500px; /* Ensure enough space */
+    padding-top: 3.5rem; /* Space for close button */
+    text-align: left; /* Align text left in modal */
+}
+.modal-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-family: var(--font-horror);
+    font-size: 2.5rem;
+    color: var(--color-knife-grey);
+    cursor: pointer;
+    transition: color 0.3s ease, transform 0.3s ease;
+    line-height: 1;
+    padding: 0.2rem;
+}
+.modal-close-btn:hover {
+    color: var(--color-blood-red);
+    transform: rotate(90deg) scale(1.1);
+}
+
+.character-modal-body {
+    display: grid;
+    grid-template-columns: 200px 1fr; /* Image column and text column */
+    gap: 2rem;
+    align-items: flex-start;
+}
+.modal-character-image-display {
+    width: 100%;
+    max-width: 200px;
+    height: auto;
+    object-fit: cover;
+    border: 2px solid var(--color-knife-grey);
+    filter: sepia(20%) contrast(1.1);
+}
+.modal-character-name-display { /* h2 in modal */
+    font-family: var(--font-horror);
+    font-size: 2.5rem;
+    color: var(--color-blood-highlight);
+    margin-bottom: 0.5rem;
+    line-height: 1.1;
+}
+.modal-character-archetype-display { /* p */
+    font-family: var(--font-accent);
+    font-size: 1.1rem;
+    color: var(--color-knife-grey);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 1.5rem;
+}
+.modal-character-bio-display { /* p */
+    font-family: var(--font-primary);
+    font-weight: 300;
+    font-size: 1rem;
+    color: var(--color-light-muted);
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+.hidden-trait-section {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px dashed var(--color-medium-dark);
+    grid-column: 1 / -1; /* Span both columns */
+}
+.trait-reveal-button { /* .cta-button */
+    display: block;
+    margin: 0 auto 1rem auto;
+    font-size: 0.9rem !important;
+    /* Other .cta-button styles apply */
+}
+.modal-character-hidden-trait-display { /* p */
+    font-family: var(--font-accent);
+    font-size: 1rem;
+    color: var(--color-blood-red);
+    font-style: italic;
+    background-color: rgba(10,10,15,0.3);
+    padding: 1rem;
+    border: 1px dashed var(--color-blood-red);
+    text-shadow: 1px 1px 1px var(--color-darkest);
+}
+
+@media (max-width: 768px) {
+    .characters-grid {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Smaller cards */
+        gap: 1.5rem;
+    }
+    .character-modal-body {
+        grid-template-columns: 1fr; /* Stack image and text on mobile */
+        text-align: center;
+    }
+    .modal-character-image-display {
+        margin: 0 auto 1.5rem auto; /* Center image */
+    }
+    .modal-character-name-display, .modal-character-archetype-display {
+        text-align: center;
+    }
+}
