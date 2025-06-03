@@ -3,15 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Inland Game - Enter the Island</title>
+    <title>The Inland Game - Enter</title>
+
+    <!-- Google Fonts (Minimal for now, can expand) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Roboto+Condensed:wght@300;700&family=Creepster&display=swap" rel="stylesheet">
+    <!-- Special Elite for "found text", Roboto Condensed for readability, Creepster for horror accents -->
+
     <link rel="stylesheet" href="css/style.css">
-    <!-- Favicon -->
+
+    <!-- Favicon (Keep your existing favicon links) -->
     <link rel="apple-touch-icon" sizes="180x180" href="assets/images/favicon_io/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon_io/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon_io/favicon-16x16.png">
     <link rel="manifest" href="assets/images/favicon_io/site.webmanifest">
 </head>
-<body>
+<body class="preload">
+
+    <!-- Global Texture Overlay (Optional) -->
+    <div class="global-texture-overlay"></div>
 
     <!-- 1. Hero Landing Page -->
     <header id="hero" class="hero-section">
@@ -19,88 +30,101 @@
             <source src="assets/images/teaser-bg.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
+        <div class="hero-vignette-overlay"></div> <!-- For darkening edges and atmosphere -->
         <div class="hero-content">
             <div id="logo-container">
                  <img src="assets/images/logo.png" alt="The Inland Game Logo" id="static-logo">
             </div>
-            <!-- Ensure data-text attribute is present for some title effects if you ever switch back -->
-            <h1 id="glitch-title" data-text="THE INLAND GAME">THE INLAND GAME</h1>
-            <button id="enter-island-cta" class="cta-button">Enter the Island</button>
+            <h1 id="hero-title" data-text="THE INLAND GAME">THE INLAND GAME</h1>
+            <button id="enter-island-cta" class="cta-button">
+                <span class="cta-text">Enter the Island</span>
+            </button>
         </div>
-        <div class="scroll-indicator">Scroll Down V</div>
     </header>
 
-    <!-- This div will wrap all subsequent content -->
-    <!-- REMOVED inline style="display: block;" -->
+    <!-- Main Content Area (Initially Hidden) -->
     <main id="main-content">
-        <!-- Sections will be added here -->
+        <!-- 2. Story Section (Card-Based) -->
+        <section id="story" class="story-section">
+            <h2 class="section-title story-title">Fragments of Truth</h2>
+            <div class="story-cards-viewport">
+                <div class="story-cards-container">
+                    <!-- Card 1 -->
+                    <div class="story-card" data-bg-image="assets/images/story-symbol-island.png">
+                        <div class="story-card-text-overlay">
+                            <p class="story-card-main-text emphasis">"7 players wake on a remote island..."</p>
+                        </div>
+                    </div>
+                    <!-- Card 2 (Quote) -->
+                    <div class="story-card quote-card" data-bg-image="assets/images/texture-blood-smear.png"> <!-- Example texture for quote -->
+                        <div class="story-card-text-overlay">
+                            <p class="story-card-quote-text">"They thought it was a game. They were wrong."</p>
+                        </div>
+                    </div>
+                    <!-- Card 3 -->
+                    <div class="story-card" data-bg-image="assets/images/story-symbol-one.png">
+                        <div class="story-card-text-overlay">
+                            <p class="story-card-main-text">"...only 1 can survive."</p>
+                        </div>
+                    </div>
+                    <!-- Card 4 -->
+                    <div class="story-card" data-bg-image="assets/images/story-symbol-eye.png">
+                        <div class="story-card-text-overlay">
+                            <p class="story-card-main-text">"The game is watched."</p>
+                        </div>
+                    </div>
+                    <!-- Card 5 (Quote) -->
+                    <div class="story-card quote-card" data-bg-image="assets/images/texture-grungy-paper.png"> <!-- Example texture -->
+                         <div class="story-card-text-overlay">
+                            <p class="story-card-quote-text">"Every sunrise brings new rules, new betrayals."</p>
+                        </div>
+                    </div>
+                    <!-- Card 6 -->
+                    <div class="story-card" data-bg-image="assets/images/story-symbol-rules.png">
+                         <div class="story-card-text-overlay">
+                            <p class="story-card-main-text">"The rules change daily."</p>
+                        </div>
+                    </div>
+                    <!-- Card 7 -->
+                    <div class="story-card" data-bg-image="assets/images/story-symbol-pattern.png">
+                         <div class="story-card-text-overlay">
+                            <p class="story-card-main-text emphasis">"Nothing is random."</p>
+                        </div>
+                    </div>
+                </div> <!-- .story-cards-container -->
+            </div> <!-- .story-cards-viewport -->
 
-        <!-- 2. The Story -->
-        <section id="story" class="content-section">
-            <h2>The Story</h2>
-            <p>"7 players wake up on a remote island... only 1 can survive. The game is watched. The rules change daily. Nothing is random."</p>
+            <div class="story-navigation">
+                <button id="story-prev-btn" class="story-nav-btn" aria-label="Previous Fragment" disabled><</button>
+                <span id="story-card-indicator">1 / 7</span>
+                <button id="story-next-btn" class="story-nav-btn" aria-label="Next Fragment">></button>
+            </div>
+            <div id="story-completion-message" class="story-completion-message" style="display: none;">
+                <p>The archives are incomplete... more fragments will surface.</p>
+            </div>
         </section>
 
-        <!-- 3. Meet the Characters -->
-        <section id="characters" class="content-section">
-            <h2>Meet the Characters</h2>
-        </section>
+        <!-- Other sections will be added later -->
+        <section id="characters" class="placeholder-section"><h2 class="section-title">Characters</h2></section>
+        <section id="token" class="placeholder-section"><h2 class="section-title">Token</h2></section>
 
-        <!-- 4. The Token -->
-        <section id="token" class="content-section">
-            <h2>Fueling The Game (INLD)</h2>
-        </section>
-
-        <!-- 5. Newsletter Sign-Up -->
-        <section id="newsletter" class="content-section">
-            <h2>Want Inside Access?</h2>
-        </section>
-
-        <!-- 6. AI-Enhanced Mystery Interaction -->
-        <section id="ai-mystery" class="content-section">
-            <h2>Ask the Island...</h2>
-        </section>
-
-        <!-- 7. Media + Teaser -->
-        <section id="media" class="content-section">
-            <h2>Transmissions</h2>
-        </section>
-
-        <!-- 8. Future Lore / Puzzle Expansion -->
-        <section id="future-lore" class="content-section">
-            <h2>The Deeper Levels</h2>
-            <p>[The Archives - LOCKED]</p>
-            <p>[Island Map - OFFLINE]</p>
-            <p>[Decryption Puzzle - COMING SOON]</p>
-        </section>
     </main>
 
-    <!-- Age Verification Modal - ADD THIS SECTION -->
-    <div id="age-gate-modal" class="modal-overlay"> <!-- style="display: none;" will be handled by CSS and JS -->
-        <div class="modal-content">
-            <h2>Age Verification</h2>
-            <p>The Inland Game contains mature themes intended for audiences 18 years of age or older. Viewer discretion is advised.</p>
-            <p>Please confirm you are 18 or older to enter the island.</p>
-            <div class="modal-actions">
-                <button id="age-confirm-yes" class="cta-button modal-button">I am 18 or Older</button>
-                <button id="age-confirm-no" class="cta-button modal-button secondary">I am Under 18</button>
+    <!-- Age Verification Modal -->
+    <div id="age-gate-modal" class="modal-overlay-container">
+        <div class="modal-content-box">
+            <h2 class="modal-title-text">Confirm Your Descent</h2>
+            <p class="modal-body-text">This island demands a certain resolve. The experiences within are intended for mature minds (18+). Confirm your readiness.</p>
+            <div class="modal-button-group">
+                <button id="age-confirm-yes" class="cta-button modal-action-button">I Am Prepared (18+)</button>
+                <button id="age-confirm-no" class="cta-button modal-action-button secondary-action">I Am Not Ready</button>
             </div>
         </div>
     </div>
 
-    <!-- 9. Footer -->
-    <footer id="footer" class="content-section">
-        <div class="social-icons">
-            <!-- Social media links will go here -->
-        </div>
+    <footer id="site-footer">
         <p>© <span id="current-year"></span> The Inland Game. All Rights Reserved.</p>
-        <p><a href="#privacy">Privacy Policy</a> | <a href="#terms">Terms of Service</a></p>
     </footer>
-
-    <!-- Commented out CDN links -->
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script> -->
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script> -->
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script> -->
 
     <script src="js/script.js"></script>
 </body>
