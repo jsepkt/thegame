@@ -56,7 +56,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const revealTraitBtn = document.getElementById('reveal-trait-btn');
     const modalCharacterHiddenTrait = document.getElementById('modal-character-hidden-trait');
 
-    // New Modal UI Elements (Voting, Progress, AI Chat)
     const modalSurvivalProgressBar = document.getElementById('modal-survival-progress-bar');
     const modalSurvivalPercentage = document.getElementById('modal-survival-percentage');
     const voteForCharacterBtn = document.getElementById('vote-for-character-btn');
@@ -67,6 +66,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const aiChatSendBtn = document.getElementById('ai-chat-send-btn');
 
     const currentYearSpan = document.getElementById('current-year');
+
+    // Newsletter Form
+    const newsletterForm = document.querySelector('form[name="newsletter-signup"]');
+    const newsletterSuccessMessage = document.getElementById('newsletter-success-message');
+    const newsletterErrorMessage = document.getElementById('newsletter-error-message');
+
 
     // --- State Variables ---
     let isAgeVerified = false;
@@ -97,20 +102,22 @@ document.addEventListener('DOMContentLoaded', () => {
             requestAnimationFrame(() => {
                  el.classList.add('visible');
             });
-        }
+        } else { console.error("DEBUG: showElement called with null element for ID:", el ? el.id : 'unknown'); }
     };
     const hideElement = (el) => {
          if (el) {
             el.classList.remove('visible');
             const modalIds = ['age-gate-modal', 'character-modal'];
             if (modalIds.includes(el.id)) {
-                el.addEventListener('transitionend', () => {
-                    if (!el.classList.contains('visible')) {
+                const handleTransitionEnd = (event) => {
+                    if (event.propertyName === 'opacity' && !el.classList.contains('visible')) {
                         el.style.visibility = 'hidden';
+                        el.removeEventListener('transitionend', handleTransitionEnd);
                     }
-                }, { once: true });
+                };
+                el.addEventListener('transitionend', handleTransitionEnd);
             }
-         }
+         } else { console.error("DEBUG: hideElement called with null element for ID:", el ? el.id : 'unknown'); }
     };
 
     // --- Initialization ---
@@ -133,10 +140,12 @@ document.addEventListener('DOMContentLoaded', () => {
             updateStoryNavigation();
         } else { console.warn("DEBUG: No story cards found."); }
 
-        if (db) { // Only set up listeners if Firestore is initialized
+        if (db) {
             characterCardWrappers.forEach(cardWrapper => {
                 const characterId = cardWrapper.dataset.characterId;
                 if (characterId) {
+                    const progressBarContainer = cardWrapper.querySelector('.character-card-progress-bar-container');
+                    if (progressBarContainer) progressBarContainer.style.display = 'block'; // Show containers always
                     listenForMiniProgressBarUpdates(characterId, cardWrapper);
                 }
             });
@@ -145,10 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Age Gate Logic ---
     function openAgeGate() {
-        if (ageGateModal) {
-            ageGateModal.style.visibility = 'visible';
-            requestAnimationFrame(() => showElement(ageGateModal));
-        }
+        if (ageGateModal) showElement(ageGateModal);
     }
     function closeAgeGate() {
         if (ageGateModal) hideElement(ageGateModal);
@@ -212,7 +218,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function openCharacterModal(characterId) {
         currentOpenCharacterId = characterId;
         const data = characterData[characterId];
-        if (!data || !characterModal) { console.error("Char data/modal error for", characterId); return; }
+        if (!data || !characterModal) { console.error("DEBUG: Char data or modal not found for ID:", characterId); return; }
+
+        console.log("DEBUG: Opening modal for character:", characterId);
 
         if(modalCharacterImage) modalCharacterImage.src = data.fullImage || data.portrait;
         if(modalCharacterName) modalCharacterName.textContent = data.name;
@@ -226,23 +234,30 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if(revealTraitBtn) revealTraitBtn.style.display = 'block';
         
-        if(aiChatOutput) aiChatOutput.innerHTML = '<p class="ai-system-message">[System: Connection established. Ask your question.]</p>';
-        if(aiChatInput) aiChatInput.value = '';
+        if(aiChatOutput) {
+            while(aiChatOutput.firstChild) { aiChatOutput.removeChild(aiChatOutput.firstChild); }
+            const systemMessage = document.createElement('p');
+            systemMessage.classList.add('ai-system-message');
+            systemMessage.textContent = "[System: Connection re-established. Transmit your query.]";
+            aiChatOutput.appendChild(systemMessage);
+        }
+        if(aiChatInput) { aiChatInput.value = ''; aiChatInput.disabled = false; }
+        if(aiChatSendBtn) aiChatSendBtn.disabled = false;
 
         if (db) {
-            listenForCharacterVotes(characterId); // Start listening for real-time updates
+            listenForCharacterVotes(characterId);
         } else {
-            updateCharacterVoteDisplay(characterId, 0); // Fallback if DB not ready
-            updateSurvivalProgressBar(characterId, 0);  // Fallback if DB not ready
+            updateCharacterVoteDisplay(characterId, 0);
+            updateSurvivalProgressBar(characterId, 0);
         }
 
         characterModal.dataset.currentCharacterId = characterId;
-        characterModal.style.visibility = 'visible';
-        requestAnimationFrame(() => showElement(characterModal));
+        showElement(characterModal);
     }
 
     function closeCharacterModal() {
         if (!characterModal) return;
+        console.log("DEBUG: Closing character modal");
         hideElement(characterModal);
         if (characterVoteUnsubscribe) {
             characterVoteUnsubscribe();
@@ -261,12 +276,11 @@ document.addEventListener('DOMContentLoaded', () => {
             await db.runTransaction(async (transaction) => {
                 const doc = await transaction.get(characterRef);
                 let newVoteCount = 1;
-                if (doc.exists && doc.data().votes !== undefined) { // Check if doc exists and votes field is there
+                if (doc.exists && doc.data() && doc.data().votes !== undefined) {
                     newVoteCount = doc.data().votes + 1;
                 }
                 transaction.set(characterRef, { votes: newVoteCount, name: characterData[characterId]?.name || characterId }, { merge: true });
             });
-            console.log(`DEBUG: Vote successful for ${characterId}. Listener will update UI.`);
         } catch (error) {
             console.error("DEBUG: Error voting for character:", characterId, error);
             alert("There was an error submitting your vote.");
@@ -275,7 +289,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function listenForCharacterVotes(characterId) {
         if (!db || !characterId) return;
-        if (characterVoteUnsubscribe) characterVoteUnsubscribe(); // Unsubscribe from previous
+        if (characterVoteUnsubscribe) characterVoteUnsubscribe();
 
         const characterRef = db.collection('character_votes').doc(characterId);
         characterVoteUnsubscribe = characterRef.onSnapshot(doc => {
@@ -283,7 +297,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (doc.exists && doc.data() && doc.data().votes !== undefined) {
                 votes = doc.data().votes;
             }
-            console.log(`DEBUG: Real-time votes for ${characterId}: ${votes}`);
             if (currentOpenCharacterId === characterId) {
                 updateCharacterVoteDisplay(characterId, votes);
                 updateSurvivalProgressBar(characterId, votes);
@@ -301,7 +314,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateSurvivalProgressBar(characterId, votes) {
-        const maxExpectedVotes = 100; // This should be a more dynamic value or based on total votes etc.
+        const maxExpectedVotes = 100;
         let percentage = (votes / maxExpectedVotes) * 100;
         percentage = Math.min(Math.max(percentage, 0), 100);
 
@@ -319,12 +332,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const progressBarContainer = cardWrapper.querySelector('.character-card-progress-bar-container');
             const progressBar = cardWrapper.querySelector('.character-card-progress-bar');
             if (progressBar && progressBarContainer) {
-                const maxExpectedVotes = 100; // Consistent logic with modal
+                const maxExpectedVotes = 100;
                 let percentage = (votes / maxExpectedVotes) * 100;
                 percentage = Math.min(Math.max(percentage, 0), 100);
                 progressBar.style.width = `${percentage}%`;
-                if (progressBarContainer.style.display === 'none') { // Show if hidden
-                    progressBarContainer.style.display = 'block';
+                 // Ensure container is visible if it was hidden initially via HTML style attr
+                if (progressBarContainer.style.display === 'none') {
+                     progressBarContainer.style.display = 'block';
                 }
             }
         }
@@ -333,9 +347,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function listenForMiniProgressBarUpdates(characterId, cardWrapper) {
         if (!db || !characterId || !cardWrapper) return;
         const characterRef = db.collection('character_votes').doc(characterId);
-        // This listener might become redundant if openCharacterModal always starts a listener
-        // However, it's good for initializing cards on page load.
-        const unsubscribe = characterRef.onSnapshot(doc => { // Store unsubscribe locally if needed, or rely on modal closing
+        characterRef.onSnapshot(doc => { // No need to store this unsubscribe unless we need to stop it specifically
             let votes = 0;
             if (doc.exists && doc.data() && doc.data().votes !== undefined) {
                 votes = doc.data().votes;
@@ -344,40 +356,101 @@ document.addEventListener('DOMContentLoaded', () => {
         }, error => {
             console.error("DEBUG: Error in mini progress listener for", characterId, error);
         });
-        // To prevent memory leaks with many listeners, you might want a way to unsubscribe these
-        // when the element is no longer relevant or page unloads, but for now this is okay for init.
     }
 
-    // --- AI Chat Logic (Placeholders) ---
-    function addMessageToChatOutput(message, sender) {
+    // --- AI Chat Logic ---
+    function addMessageToChatOutput(message, sender, isThinking = false) {
         if (!aiChatOutput) return;
         const messageEl = document.createElement('p');
-        messageEl.classList.add(sender === 'user' ? 'user-message' : 'ai-response-message');
+        const messageTypeClass = sender === 'user' ? 'user-message' : 'ai-response-message';
+        messageEl.classList.add(messageTypeClass);
+        if (isThinking) messageEl.classList.add('thinking');
         messageEl.textContent = message;
         aiChatOutput.appendChild(messageEl);
         aiChatOutput.scrollTop = aiChatOutput.scrollHeight;
+        return messageEl;
     }
 
     async function sendChatMessageToAI(characterId, userMessage) {
         if (!userMessage.trim()) return;
+        if (!characterId) { addMessageToChatOutput("[System Error: Character context lost.]", 'ai'); return; }
+
         addMessageToChatOutput(userMessage, 'user');
-        if(aiChatInput) aiChatInput.value = '';
-        addMessageToChatOutput("...", 'ai'); // Thinking indicator
+        if (aiChatInput) aiChatInput.value = '';
+        if (aiChatInput) aiChatInput.disabled = true;
+        if (aiChatSendBtn) aiChatSendBtn.disabled = true;
 
-        // TODO: Netlify Function call to Google Studio AI
-        setTimeout(() => {
-            const characterName = characterData[characterId]?.name || "the character";
-            const aiResponse = `This is a placeholder AI response for ${characterName} regarding: "${userMessage}". Real AI integration coming soon!`;
-            const thinkingMessages = aiChatOutput.querySelectorAll('.ai-response-message');
-            const lastThinkingMessage = thinkingMessages.length ? thinkingMessages[thinkingMessages.length -1] : null;
+        const thinkingEl = addMessageToChatOutput("...", 'ai', true);
 
-            if(lastThinkingMessage && lastThinkingMessage.textContent === '...') {
-                lastThinkingMessage.textContent = aiResponse;
-            } else { addMessageToChatOutput(aiResponse, 'ai'); }
-        }, 1500);
+        try {
+            const response = await fetch('/.netlify/functions/chatWithCharacter', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    characterId: characterId,
+                    characterName: characterData[characterId]?.name || "Unknown Character",
+                    prompt: userMessage,
+                }),
+            });
+
+            if (thinkingEl) thinkingEl.remove();
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({ message: "Unknown server error." }));
+                throw new Error(`Server error: ${response.status}. ${errorData.message || ''}`);
+            }
+            const data = await response.json();
+            addMessageToChatOutput(data.reply || "[System: No reply received.]", 'ai');
+        } catch (error) {
+            console.error("DEBUG: Error sending/receiving AI chat message:", error);
+            if (thinkingEl) thinkingEl.remove();
+            addMessageToChatOutput(`[System Error: Communication failed. ${error.message}]`, 'ai');
+        } finally {
+            if (aiChatInput) aiChatInput.disabled = false;
+            if (aiChatSendBtn) aiChatSendBtn.disabled = false;
+            if (aiChatInput) aiChatInput.focus();
+        }
     }
 
-    // --- Event Listeners ---
+    // --- Newsletter Form Submission ---
+    if (newsletterForm) {
+        newsletterForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            if (newsletterSuccessMessage) newsletterSuccessMessage.style.display = 'none';
+            if (newsletterErrorMessage) newsletterErrorMessage.style.display = 'none';
+            const formData = new FormData(newsletterForm);
+            const submitButton = newsletterForm.querySelector('button[type="submit"]');
+            if(submitButton) submitButton.disabled = true;
+
+            try {
+                const response = await fetch('/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams(formData).toString(),
+                });
+                if (response.ok) {
+                    if (newsletterSuccessMessage) newsletterSuccessMessage.style.display = 'block';
+                    newsletterForm.reset();
+                } else {
+                    const errorText = await response.text();
+                    if (newsletterErrorMessage) {
+                        newsletterErrorMessage.textContent = `Submission failed. Server responded: ${response.status}. Please try again. Details: ${errorText}`;
+                        newsletterErrorMessage.style.display = 'block';
+                    }
+                }
+            } catch (error) {
+                if (newsletterErrorMessage) {
+                     newsletterErrorMessage.textContent = 'An error occurred. Please check your connection and try again.';
+                     newsletterErrorMessage.style.display = 'block';
+                }
+            } finally {
+                if(submitButton) submitButton.disabled = false;
+            }
+        });
+    } else { console.warn("DEBUG: Newsletter form not found."); }
+
+
+    // --- Event Listeners Setup ---
     if (enterIslandCTA) enterIslandCTA.addEventListener('click', () => { if (isAgeVerified) enterTheIsland(); else openAgeGate(); });
     if (ageConfirmYesBtn) ageConfirmYesBtn.addEventListener('click', () => handleAgeConfirmation(true));
     if (ageConfirmNoBtn) ageConfirmNoBtn.addEventListener('click', () => handleAgeConfirmation(false));
@@ -385,12 +458,15 @@ document.addEventListener('DOMContentLoaded', () => {
     if (storyPrevBtn) storyPrevBtn.addEventListener('click', () => { if (currentStoryCardIdx > 0) { currentStoryCardIdx--; scrollStoryCardIntoView(currentStoryCardIdx); updateStoryNavigation(); }});
     
     characterCardWrappers.forEach(cardWrapper => {
-        const revealButton = cardWrapper.querySelector('.character-reveal-btn');
-        const clickableElement = revealButton || cardWrapper; // Prefer button if exists
-        clickableElement.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const characterId = cardWrapper.dataset.characterId;
-            if (characterId) openCharacterModal(characterId);
+        cardWrapper.addEventListener('click', (e) => {
+            if (e.target.closest('button.character-reveal-btn')) { // Only trigger if button itself is clicked or is an ancestor
+                 e.stopPropagation(); // Prevent card click if button is separate (it is)
+                 const characterId = cardWrapper.dataset.characterId;
+                 if (characterId) openCharacterModal(characterId);
+            } else if (e.target.closest('.character-card-front')) { // Allow click on front to open modal
+                 const characterId = cardWrapper.dataset.characterId;
+                 if (characterId) openCharacterModal(characterId);
+            }
         });
     });
 
@@ -405,8 +481,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (voteForCharacterBtn) voteForCharacterBtn.addEventListener('click', () => { if (currentOpenCharacterId) voteForCharacter(currentOpenCharacterId); });
     if (aiChatSendBtn) aiChatSendBtn.addEventListener('click', () => { if (currentOpenCharacterId && aiChatInput) sendChatMessageToAI(currentOpenCharacterId, aiChatInput.value); });
-    if (aiChatInput) aiChatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter' && currentOpenCharacterId) sendChatMessageToAI(currentOpenCharacterId, aiChatInput.value); });
-
+    if (aiChatInput) aiChatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter' && currentOpenCharacterId) { e.preventDefault(); sendChatMessageToAI(currentOpenCharacterId, aiChatInput.value); }});
+    
     // --- Run Initialization ---
     initializeSite();
 });

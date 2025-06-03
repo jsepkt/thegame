@@ -1,0 +1,24 @@
+{
+  "name": "thegame",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jsepkt/thegame.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jsepkt/thegame/issues"
+  },
+  "homepage": "https://github.com/jsepkt/thegame#readme",
+  "description": "",
+  "dependencies": {
+    "@google-ai/generativelanguage": "^3.2.0",
+    "google-auth-library": "^10.0.0-rc.3"
+  }
+}

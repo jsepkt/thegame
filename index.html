@@ -27,7 +27,7 @@
         apiKey: "AIzaSyDFu_Tiu-_b8btQy-kEmtfLvRZ7yjjTBKI", // YOUR ACTUAL KEY
         authDomain: "thinlandgame.firebaseapp.com",
         projectId: "thinlandgame",
-        storageBucket: "thinlandgame.appspot.com", // Corrected format
+        storageBucket: "thinlandgame.appspot.com", // Ensure this is the correct format/value
         messagingSenderId: "397725181114",
         appId: "1:397725181114:web:afd331889aa68c3e2e0e83",
         measurementId: "G-F232770KG9"
@@ -37,7 +37,6 @@
     <!-- Firebase SDKs (Compat versions) - Load BEFORE your script.js -->
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
-    <!-- <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-analytics-compat.js"></script> -->
 
 </head>
 <body class="preload">
@@ -67,51 +66,15 @@
             <h2 class="section-title story-title">Fragments of Truth</h2>
             <div class="story-cards-viewport">
                 <div class="story-cards-container">
-                    <!-- Card 1 -->
-                    <div class="story-card" data-bg-image="assets/images/story-symbol-island.png">
-                        <div class="story-card-text-overlay">
-                            <p class="story-card-main-text emphasis">"7 players wake on a remote island..."</p>
-                        </div>
-                    </div>
-                    <!-- Card 2 (Quote) -->
-                    <div class="story-card quote-card" data-bg-image="assets/images/texture-blood-smear.png">
-                        <div class="story-card-text-overlay">
-                            <p class="story-card-quote-text">"They thought it was a game. They were wrong."</p>
-                        </div>
-                    </div>
-                    <!-- Card 3 -->
-                    <div class="story-card" data-bg-image="assets/images/story-symbol-one.png">
-                        <div class="story-card-text-overlay">
-                            <p class="story-card-main-text">"...only 1 can survive."</p>
-                        </div>
-                    </div>
-                    <!-- Card 4 -->
-                    <div class="story-card" data-bg-image="assets/images/story-symbol-eye.png">
-                        <div class="story-card-text-overlay">
-                            <p class="story-card-main-text">"The game is watched."</p>
-                        </div>
-                    </div>
-                    <!-- Card 5 (Quote) -->
-                    <div class="story-card quote-card" data-bg-image="assets/images/texture-grungy-paper.png">
-                         <div class="story-card-text-overlay">
-                            <p class="story-card-quote-text">"Every sunrise brings new rules, new betrayals."</p>
-                        </div>
-                    </div>
-                    <!-- Card 6 -->
-                    <div class="story-card" data-bg-image="assets/images/story-symbol-rules.png">
-                         <div class="story-card-text-overlay">
-                            <p class="story-card-main-text">"The rules change daily."</p>
-                        </div>
-                    </div>
-                    <!-- Card 7 -->
-                    <div class="story-card" data-bg-image="assets/images/story-symbol-pattern.png">
-                         <div class="story-card-text-overlay">
-                            <p class="story-card-main-text emphasis">"Nothing is random."</p>
-                        </div>
-                    </div>
-                </div> <!-- .story-cards-container -->
-            </div> <!-- .story-cards-viewport -->
-
+                    <div class="story-card" data-bg-image="assets/images/story-symbol-island.png"><div class="story-card-text-overlay"><p class="story-card-main-text emphasis">"7 players wake on a remote island..."</p></div></div>
+                    <div class="story-card quote-card" data-bg-image="assets/images/texture-blood-smear.png"><div class="story-card-text-overlay"><p class="story-card-quote-text">"They thought it was a game. They were wrong."</p></div></div>
+                    <div class="story-card" data-bg-image="assets/images/story-symbol-one.png"><div class="story-card-text-overlay"><p class="story-card-main-text">"...only 1 can survive."</p></div></div>
+                    <div class="story-card" data-bg-image="assets/images/story-symbol-eye.png"><div class="story-card-text-overlay"><p class="story-card-main-text">"The game is watched."</p></div></div>
+                    <div class="story-card quote-card" data-bg-image="assets/images/texture-grungy-paper.png"><div class="story-card-text-overlay"><p class="story-card-quote-text">"Every sunrise brings new rules, new betrayals."</p></div></div>
+                    <div class="story-card" data-bg-image="assets/images/story-symbol-rules.png"><div class="story-card-text-overlay"><p class="story-card-main-text">"The rules change daily."</p></div></div>
+                    <div class="story-card" data-bg-image="assets/images/story-symbol-pattern.png"><div class="story-card-text-overlay"><p class="story-card-main-text emphasis">"Nothing is random."</p></div></div>
+                </div>
+            </div>
             <div class="story-navigation">
                 <button id="story-prev-btn" class="story-nav-btn" aria-label="Previous Fragment" disabled><</button>
                 <span id="story-card-indicator">1 / 7</span>
@@ -129,18 +92,8 @@
                 <!-- Aiden Cross -->
                 <div class="character-card-wrapper" data-character-id="aiden-cross">
                     <div class="character-card">
-                        <div class="character-card-front">
-                            <img src="assets/images/characters/aiden_cross.jpg" alt="Aiden Cross" class="character-portrait">
-                            <h3 class="character-name-preview">Aiden Cross</h3>
-                        </div>
-                        <div class="character-card-back"> {/* Content for back of card, shown on click before modal */}
-                            <h3 class="character-name-detail">Aiden Cross</h3>
-                            <p class="character-archetype">The Strategic Player</p>
-                            <div class="character-card-progress-bar-container">
-                                <div class="character-card-progress-bar" style="width: 0%;"></div>
-                            </div>
-                            <button class="character-reveal-btn" aria-label="View Aiden Cross Details">View Dossier</button>
-                        </div>
+                        <div class="character-card-front"><img src="assets/images/characters/aiden_cross.jpg" alt="Aiden Cross" class="character-portrait"><h3 class="character-name-preview">Aiden Cross</h3></div>
+                        <div class="character-card-back"><h3 class="character-name-detail">Aiden Cross</h3><p class="character-archetype">The Strategic Player</p><div class="character-card-progress-bar-container"><div class="character-card-progress-bar" style="width: 0%;"></div></div><button class="character-reveal-btn">View Dossier</button></div>
                     </div>
                 </div>
                 <!-- Selene Ward -->
@@ -209,7 +162,7 @@
             </div> <!-- .characters-grid -->
         </section>
 
-        <!-- Character Detail Modal (Updated) -->
+        <!-- Character Detail Modal -->
         <div id="character-modal" class="modal-overlay-container character-detail-modal">
             <div class="modal-content-box character-modal-content">
                 <button id="character-modal-close-btn" class="modal-close-btn" aria-label="Close character details">×</button>
@@ -218,7 +171,6 @@
                     <div class="character-modal-text-content">
                         <h2 id="modal-character-name" class="modal-character-name-display">Character Name</h2>
                         <p id="modal-character-archetype" class="modal-character-archetype-display">Archetype</p>
-                        
                         <div class="survival-progress-section">
                             <h4>Survival Probability:</h4>
                             <div class="progress-bar-container modal-progress-bar-container">
@@ -226,35 +178,56 @@
                                 <span id="modal-survival-percentage" class="progress-percentage">0%</span>
                             </div>
                         </div>
-
-                        <p id="modal-character-bio" class="modal-character-bio-display">Short bio snippet goes here...</p>
+                        <p id="modal-character-bio" class="modal-character-bio-display">Short bio snippet...</p>
                     </div>
-
                     <div class="hidden-trait-section">
                         <button id="reveal-trait-btn" class="cta-button trait-reveal-button">Decode Signal: Hidden Trait</button>
-                        <p id="modal-character-hidden-trait" class="modal-character-hidden-trait-display" style="display: none;">Hidden trait/backstory revealed here...</p>
+                        <p id="modal-character-hidden-trait" class="modal-character-hidden-trait-display" style="display: none;">Hidden trait...</p>
                     </div>
-
                     <div class="character-vote-section">
-                        <button id="vote-for-character-btn" class="cta-button vote-button">
-                            <i class="fas fa-heartbeat"></i> Vote for Survival
-                        </button>
+                        <button id="vote-for-character-btn" class="cta-button vote-button"><i class="fas fa-heartbeat"></i> Vote for Survival</button>
                         <p class="vote-count">Votes: <span id="modal-character-vote-count">0</span></p>
                     </div>
-
                     <div class="character-ai-chat-section">
                         <h4>Communicate with <span id="modal-ai-chat-name">Character</span>:</h4>
                         <div id="ai-chat-output" class="ai-chat-output-area">
-                            <p class="ai-system-message">[System: Connection established. Ask your question.]</p>
+                            <p class="ai-system-message">[System: Connection initialized. Ask your question.]</p>
                         </div>
                         <div class="ai-chat-input-area">
-                            <input type="text" id="ai-chat-input" placeholder="Type your question...">
+                            <textarea id="ai-chat-input" placeholder="Transmit your query..." rows="2"></textarea>
                             <button id="ai-chat-send-btn" class="cta-button ai-send-button">Send</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- 5. Newsletter Sign-Up -->
+        <section id="newsletter" class="content-section newsletter-section">
+            <h2 class="section-title">Want Inside Access?</h2>
+            <p class="newsletter-tagline">Join the Players’ Circle to get early clues, exclusive content drops, and AI-lore before anyone else. Don't just watch the game, become a part of its unfolding secrets.</p>
+            <form name="newsletter-signup" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="newsletter-form">
+                <p class="hidden-field" style="display:none;">
+                    <label>Don’t fill this out if you’re human: <input name="bot-field"></label>
+                </p>
+                <input type="hidden" name="form-name" value="newsletter-signup">
+                <div class="form-group">
+                    <label for="nl-name" class="visually-hidden">Name (Optional)</label>
+                    <input type="text" id="nl-name" name="name" placeholder="Your Name (Optional)">
+                </div>
+                <div class="form-group">
+                    <label for="nl-email" class="visually-hidden">Email Address</label>
+                    <input type="email" id="nl-email" name="email" placeholder="Your Email Address" required>
+                </div>
+                <button type="submit" class="cta-button newsletter-submit-btn">Join the Circle</button>
+            </form>
+            <div id="newsletter-success-message" class="form-success-message" style="display:none;">
+                Thanks for subscribing! Keep an eye on your inbox for transmissions from the island.
+            </div>
+            <div id="newsletter-error-message" class="form-error-message" style="display:none;">
+                Oops! Something went wrong. Please try again.
+            </div>
+        </section>
 
         <section id="token" class="placeholder-section"><h2 class="section-title">Token</h2></section>
     </main>
