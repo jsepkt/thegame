@@ -1,6 +1,6 @@
 // js/script.js
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("The Inland Game - Site Loaded");
+    console.log("DEBUG: DOMContentLoaded - Script Start");
 
     const heroSection = document.getElementById('hero');
     const mainContent = document.getElementById('main-content');
@@ -15,53 +15,96 @@ document.addEventListener('DOMContentLoaded', () => {
     let contentRevealed = false; // Flag for main content
     const AGE_VERIFIED_KEY = 'inlandGameAgeVerified'; // localStorage key
 
+    console.log("DEBUG: Variables declared.", {
+        heroSection,
+        mainContent,
+        enterIslandCTA,
+        scrollIndicator,
+        ageGateModal,
+        ageConfirmYesBtn,
+        ageConfirmNoBtn
+    });
+
     function showAgeGate() {
+        console.log("DEBUG: showAgeGate() called");
         if (ageGateModal) {
             ageGateModal.style.display = 'flex'; // Show overlay
-            setTimeout(() => ageGateModal.classList.add('visible'), 10); // Trigger transition
-            console.log("Age gate shown");
+            // Use a micro-task or very short timeout to ensure 'display' change is processed before classList modification
+            requestAnimationFrame(() => {
+                ageGateModal.classList.add('visible');
+                console.log("DEBUG: Age gate modal class 'visible' added");
+            });
+        } else {
+            console.error("DEBUG CRITICAL: ageGateModal element not found in showAgeGate()");
         }
     }
 
     function hideAgeGate() {
+        console.log("DEBUG: hideAgeGate() called");
         if (ageGateModal) {
             ageGateModal.classList.remove('visible');
             // Wait for transition to finish before setting display to none
-            setTimeout(() => ageGateModal.style.display = 'none', 500);
+            ageGateModal.addEventListener('transitionend', function handleTransitionEnd() {
+                ageGateModal.style.display = 'none';
+                console.log("DEBUG: Age gate modal display set to 'none' after transition.");
+                ageGateModal.removeEventListener('transitionend', handleTransitionEnd); // Clean up listener
+            }, { once: true }); // Ensure listener fires only once
+        } else {
+            console.error("DEBUG CRITICAL: ageGateModal element not found in hideAgeGate()");
         }
     }
 
     function revealSiteContent() {
+        console.log("DEBUG: revealSiteContent() called. contentRevealed:", contentRevealed);
         if (!contentRevealed && mainContent) {
-            mainContent.classList.add('visible');
-            console.log("Main content revealed");
+            mainContent.classList.add('visible'); // This should trigger display: block and opacity transition from CSS
+            console.log("DEBUG: mainContent class 'visible' added.");
 
             if (scrollIndicator && heroSection) {
-                heroSection.classList.add('content-revealed');
+                heroSection.classList.add('content-revealed'); // Hide scroll indicator
+                console.log("DEBUG: heroSection class 'content-revealed' added.");
             }
             contentRevealed = true;
 
             // Scroll to the first section after reveal
+            // Ensure content is actually display:block before scrolling
+            // We rely on the CSS transition to make it visible, then scroll.
+            // The opacity transition takes 1.5s. We can scroll sooner if display:block is immediate.
             setTimeout(() => {
                 const firstSection = mainContent.querySelector('.content-section');
-                if (firstSection) {
-                    firstSection.scrollIntoView({ behavior: 'smooth' });
+                if (mainContent.classList.contains('visible') && getComputedStyle(mainContent).display !== 'none') {
+                    if (firstSection) {
+                        console.log("DEBUG: Scrolling to firstSection:", firstSection);
+                        firstSection.scrollIntoView({ behavior: 'smooth' });
+                    } else {
+                        console.log("DEBUG: Scrolling to mainContent (fallback):", mainContent);
+                        mainContent.scrollIntoView({ behavior: 'smooth' });
+                    }
                 } else {
-                    mainContent.scrollIntoView({ behavior: 'smooth' });
+                     console.warn("DEBUG: mainContent not yet display:block or not .visible, scroll aborted or delayed. Check CSS for #main-content.visible { display: block; }");
                 }
-            }, 100); // Small delay for display property to take effect
+            }, 150); // Increased delay to allow for rendering after class change
+        } else if (contentRevealed) {
+            console.log("DEBUG: revealSiteContent() called but content already revealed.");
+        } else if (!mainContent) {
+            console.error("DEBUG CRITICAL: mainContent element not found in revealSiteContent()");
         }
     }
 
     function handleAgeConfirmation(isVerified) {
-        hideAgeGate();
+        console.log("DEBUG: handleAgeConfirmation() called. isVerified:", isVerified);
+        hideAgeGate(); // This should now wait for transition before hiding
         if (isVerified) {
-            console.log("Age confirmed: 18+");
-            localStorage.setItem(AGE_VERIFIED_KEY, 'true'); // Store confirmation
+            console.log("DEBUG: Age confirmed: 18+");
+            try {
+                localStorage.setItem(AGE_VERIFIED_KEY, 'true'); // Store confirmation
+                console.log("DEBUG: localStorage AGE_VERIFIED_KEY set to true.");
+            } catch (e) {
+                console.error("DEBUG: Error setting localStorage item.", e);
+            }
             revealSiteContent();
         } else {
-            console.log("Age confirmed: Under 18 - Access Denied");
-            // Optional: Redirect or show a message
+            console.log("DEBUG: Age confirmed: Under 18 - Access Denied");
             alert("Access Denied. You must be 18 or older to enter The Inland Game.");
             // window.location.href = "https://www.google.com"; // Example redirect
         }
@@ -71,55 +114,61 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // "Enter the Island" CTA click
     if (enterIslandCTA) {
+        console.log("DEBUG: Attaching click listener to enterIslandCTA:", enterIslandCTA);
         enterIslandCTA.addEventListener('click', (event) => {
+            console.log("DEBUG: 'Enter the Island' CTA clicked!");
             event.preventDefault(); // Prevent default button action if any
             
-            // Check if already verified in this session
-            if (localStorage.getItem(AGE_VERIFIED_KEY) === 'true') {
-                console.log("Age already verified in this session.");
+            let isAgeVerified = false;
+            try {
+                isAgeVerified = localStorage.getItem(AGE_VERIFIED_KEY) === 'true';
+                console.log("DEBUG: Checked localStorage. AGE_VERIFIED_KEY:", isAgeVerified);
+            } catch (e) {
+                console.error("DEBUG: Error getting localStorage item.", e);
+                // Proceed as if not verified if localStorage fails
+            }
+
+            if (isAgeVerified) {
+                console.log("DEBUG: Age already verified in localStorage. Revealing site content.");
                 revealSiteContent(); // Directly reveal if already verified
             } else {
+                console.log("DEBUG: Age not verified in localStorage. Showing age gate.");
                 showAgeGate();
             }
         });
+    } else {
+        console.error("DEBUG CRITICAL: 'Enter the Island' CTA button (id='enter-island-cta') NOT FOUND in DOM!");
     }
 
     // Age Gate "Yes" button
     if (ageConfirmYesBtn) {
-        ageConfirmYesBtn.addEventListener('click', () => handleAgeConfirmation(true));
+        console.log("DEBUG: Attaching click listener to ageConfirmYesBtn:", ageConfirmYesBtn);
+        ageConfirmYesBtn.addEventListener('click', () => {
+            console.log("DEBUG: 'I am 18 or Older' (ageConfirmYesBtn) button clicked");
+            handleAgeConfirmation(true);
+        });
+    } else {
+        console.error("DEBUG CRITICAL: Age confirm 'Yes' button (id='age-confirm-yes') NOT FOUND in DOM!");
     }
 
     // Age Gate "No" button
     if (ageConfirmNoBtn) {
-        ageConfirmNoBtn.addEventListener('click', () => handleAgeConfirmation(false));
+        console.log("DEBUG: Attaching click listener to ageConfirmNoBtn:", ageConfirmNoBtn);
+        ageConfirmNoBtn.addEventListener('click', () => {
+            console.log("DEBUG: 'I am Under 18' (ageConfirmNoBtn) button clicked");
+            handleAgeConfirmation(false);
+        });
+    } else {
+        console.error("DEBUG CRITICAL: Age confirm 'No' button (id='age-confirm-no') NOT FOUND in DOM!");
     }
-
-    // Scroll-based reveal (Optional - you might want to remove this if age gate is mandatory)
-    // If you keep it, ensure it also checks for localStorage age verification
-    // For now, let's comment it out to make age gate the primary entry point.
-    /*
-    let heroScrolled = false;
-    window.addEventListener('scroll', () => {
-        if (localStorage.getItem(AGE_VERIFIED_KEY) === 'true' && !contentRevealed && heroSection && window.scrollY > heroSection.offsetHeight * 0.5) {
-            revealSiteContent();
-        } else if (!localStorage.getItem(AGE_VERIFIED_KEY) && !contentRevealed && heroSection && window.scrollY > heroSection.offsetHeight * 0.5) {
-            // If they scroll without clicking CTA and haven't verified, show age gate
-            showAgeGate();
-        }
-    });
-    */
-
-    // --- Initial check on page load ---
-    // If you want the site to be accessible directly if age was previously verified
-    // AND you want to bypass the hero screen immediately (not recommended for first view)
-    // if (localStorage.getItem(AGE_VERIFIED_KEY) === 'true') {
-    //    revealSiteContent();
-    // }
-
 
     // --- Update current year in footer ---
     const currentYearSpan = document.getElementById('current-year');
     if (currentYearSpan) {
         currentYearSpan.textContent = new Date().getFullYear();
+    } else {
+        console.warn("DEBUG: current-year span not found in footer.");
     }
+
+    console.log("DEBUG: DOMContentLoaded - Script End. Event listeners should be active.");
 });
