@@ -266,3 +266,25 @@ a:hover {
     line-height: 1.7; /* Slightly more line height for monospace */
     color: #b0b0b0; /* Adjusted paragraph color for better readability with monospace */
 }
+
+/* css/style.css */
+
+/* ... (other styles) ... */
+
+/* Initially hide main content after hero */
+#main-content {
+    display: none; /* Hide it by default */
+    opacity: 0;
+    transition: opacity 1.5s ease-in-out; /* Smooth fade-in transition */
+}
+
+#main-content.visible {
+    display: block; /* Or flex, grid, etc. depending on its internal layout needs */
+    opacity: 1;
+}
+
+/* Optional: Class to hide scroll indicator once content is shown */
+.hero-section.content-revealed .scroll-indicator {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}

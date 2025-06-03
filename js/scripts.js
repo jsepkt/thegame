@@ -1,31 +1,61 @@
+// js/script.js
 document.addEventListener('DOMContentLoaded', () => {
     console.log("The Inland Game - Site Loaded");
 
+    const heroSection = document.getElementById('hero');
     const mainContent = document.getElementById('main-content');
     const enterIslandCTA = document.getElementById('enter-island-cta');
-    const heroSection = document.getElementById('hero');
+    const scrollIndicator = document.querySelector('.scroll-indicator'); // Get scroll indicator
 
-    // --- Smooth Scroll to Main Content on CTA click ---
-    if (enterIslandCTA && mainContent) {
-        enterIslandCTA.addEventListener('click', () => {
-            // mainContent.style.display = 'block'; // Reveal content
-            // For now, we just scroll. We'll handle the reveal properly later.
-            mainContent.scrollIntoView({ behavior: 'smooth' });
-        });
+    let contentRevealed = false; // Flag to ensure reveal logic runs only once
+
+    function revealMainContent() {
+        if (!contentRevealed && mainContent) {
+            // mainContent.style.display = 'block'; // Old way
+            mainContent.classList.add('visible'); // Add class for CSS transition
+            console.log("Main content revealed");
+
+            if (scrollIndicator && heroSection) {
+                heroSection.classList.add('content-revealed'); // Hide scroll indicator
+            }
+            contentRevealed = true;
+
+            // Optional: Remove event listeners if they are no longer needed
+            if (enterIslandCTA) {
+                enterIslandCTA.removeEventListener('click', handleCTAClick);
+            }
+            window.removeEventListener('scroll', handleScroll);
+        }
     }
 
-    // --- Scroll Trigger to reveal main content (alternative to click) ---
-    // We'll make this more robust later
-    // This is a very basic version
-    let heroScrolled = false;
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > heroSection.offsetHeight / 2 && !heroScrolled) {
-            // mainContent.style.display = 'block';
-            // console.log("Scrolled past hero, revealing content");
-            // heroScrolled = true; // Ensure it only runs once
-            // This logic will be refined. For now, all content is visible.
+    function handleCTAClick() {
+        revealMainContent();
+        // Smooth scroll to the start of main content AFTER it's made visible
+        // We need a slight delay for the display property to take effect before scrolling
+        setTimeout(() => {
+            if (mainContent) { // Check if mainContent exists
+                 // Find the first actual section within main-content to scroll to
+                const firstSection = mainContent.querySelector('.content-section');
+                if (firstSection) {
+                    firstSection.scrollIntoView({ behavior: 'smooth' });
+                } else { // Fallback if no .content-section found
+                    mainContent.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+        }, 100); // Small delay
+    }
+
+    function handleScroll() {
+        if (heroSection && window.scrollY > heroSection.offsetHeight * 0.5) { // Reveal after scrolling 50% of hero height
+            revealMainContent();
         }
-    });
+    }
+
+    // --- Event Listeners ---
+    if (enterIslandCTA) {
+        enterIslandCTA.addEventListener('click', handleCTAClick);
+    }
+    window.addEventListener('scroll', handleScroll);
 
 
     // --- Update current year in footer ---
@@ -33,9 +63,4 @@ document.addEventListener('DOMContentLoaded', () => {
     if (currentYearSpan) {
         currentYearSpan.textContent = new Date().getFullYear();
     }
-
-    // --- Placeholder for future functions ---
-    // function initAIFeatures() { ... }
-    // function initCharacterModals() { ... }
-    // function initStoryAnimations() { ... }
 });
