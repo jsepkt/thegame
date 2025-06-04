@@ -1,3 +1,4 @@
 [functions]
   directory = "netlify/functions/"
-  node_bundler = "esbuild" # Recommended for modern JS
+  node_bundler = "esbuild"
+  node_version = "18" 

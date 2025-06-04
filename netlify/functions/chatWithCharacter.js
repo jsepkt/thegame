@@ -3,7 +3,7 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const API_KEY = process.env.GOOGLE_STUDIO_API_KEY;
-const MODEL_NAME_FOR_TEST = "gemini-pro"; 
+const MODEL_NAME_FOR_TEST = "gemini-1.5-flash-latest"; 
 
 let genAI_client_instance; // Renamed to avoid conflict if genAI is used elsewhere as a common name
 
