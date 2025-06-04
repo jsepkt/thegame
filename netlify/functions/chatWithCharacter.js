@@ -4,7 +4,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const API_KEY = process.env.GOOGLE_STUDIO_API_KEY;
 // Testing with Gemini Pro to verify API key and SDK setup
-const MODEL_NAME = "gemini-1.0-pro-latest";
+const MODEL_NAME = "gemini-pro";
 
 let genAI;
 let model;
