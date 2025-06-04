@@ -60,9 +60,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const voteForCharacterBtn = document.getElementById('vote-for-character-btn');
     const modalCharacterVoteCount = document.getElementById('modal-character-vote-count');
     const modalAiChatName = document.getElementById('modal-ai-chat-name');
-    const aiChatOutput = document.getElementById('ai-chat-output'); // For Character Modal
-    const aiChatInput = document.getElementById('ai-chat-input');   // For Character Modal
-    const aiChatSendBtn = document.getElementById('ai-chat-send-btn'); // For Character Modal
+    const aiChatOutput = document.getElementById('ai-chat-output'); 
+    const aiChatInput = document.getElementById('ai-chat-input');   
+    const aiChatSendBtn = document.getElementById('ai-chat-send-btn');
 
     const currentYearSpan = document.getElementById('current-year');
 
@@ -70,12 +70,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const newsletterSuccessMessage = document.getElementById('newsletter-success-message');
     const newsletterErrorMessage = document.getElementById('newsletter-error-message');
 
-    // NEW: Island Oracle Chat Elements
     const oracleChatOutput = document.getElementById('oracle-chat-output');
     const oracleChatInput = document.getElementById('oracle-chat-input');
     const oracleChatSendBtn = document.getElementById('oracle-chat-send-btn');
     const oracleStatusLight = document.querySelector('.oracle-status .status-light');
-
 
     // --- State Variables ---
     let isAgeVerified = false;
@@ -85,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentOpenCharacterId = null;
     let characterVoteUnsubscribe = null;
 
-    // --- Character Data (Ensure this is complete and matches your HTML data-character-id values) ---
+    // --- Character Data ---
     const characterData = {
         "aiden-cross": { name: "Aiden Cross", archetype: "The Strategic Player", portrait: "assets/images/characters/aiden_cross.jpg", fullImage: "assets/images/characters/aiden_cross.jpg", bio: "A master tactician haunted by a past failure...", hiddenTrait: "Suffers from recurring nightmares..." },
         "selene-ward": { name: "Selene Ward", archetype: "The Silent Survivor", portrait: "assets/images/characters/selene_ward.jpg", fullImage: "assets/images/characters/selene_ward.jpg", bio: "Quiet and observant, Selene moves like a ghost...", hiddenTrait: "Carries a memento from a past she refuses to speak of..." },
@@ -103,15 +101,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const showElement = (el) => {
         if (el) {
             el.style.visibility = 'visible';
-            requestAnimationFrame(() => {
-                 el.classList.add('visible');
-            });
-        } else { console.error("DEBUG: showElement called with null for an element."); }
+            requestAnimationFrame(() => { el.classList.add('visible'); });
+        } else { console.error("DEBUG: showElement called with null."); }
     };
     const hideElement = (el) => {
          if (el) {
             el.classList.remove('visible');
-            const modalIds = ['age-gate-modal', 'character-modal']; // Add other modal IDs if any
+            const modalIds = ['age-gate-modal', 'character-modal'];
             if (modalIds.includes(el.id)) {
                 const handleTransitionEnd = (event) => {
                     if (event.propertyName === 'opacity' && !el.classList.contains('visible')) {
@@ -121,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
                 el.addEventListener('transitionend', handleTransitionEnd);
             }
-         } else { console.error("DEBUG: hideElement called with null for an element.");}
+         } else { console.error("DEBUG: hideElement called with null.");}
     };
 
     // --- Initialization ---
@@ -129,27 +125,22 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("DEBUG: Initializing site...");
         body.classList.remove('preload');
         if (currentYearSpan) currentYearSpan.textContent = new Date().getFullYear();
-
         storyCards.forEach(card => {
             const bgImage = card.dataset.bgImage;
             if (bgImage) card.style.backgroundImage = `url('${bgImage}')`;
         });
-        
         if (localStorage.getItem(AGE_VERIFIED_STORAGE_KEY) === 'true') {
             isAgeVerified = true;
             console.log("DEBUG: Age previously verified");
         }
-
-        if (storyCards.length > 0) {
-            updateStoryNavigation();
-        } else { console.warn("DEBUG: No story cards found."); }
-
+        if (storyCards.length > 0) updateStoryNavigation();
+        else console.warn("DEBUG: No story cards found.");
         if (db) {
             characterCardWrappers.forEach(cardWrapper => {
                 const characterId = cardWrapper.dataset.characterId;
                 if (characterId) {
                     const progressBarContainer = cardWrapper.querySelector('.character-card-progress-bar-container');
-                    if (progressBarContainer) progressBarContainer.style.display = 'block'; // Make sure it's visible to be updated
+                    if (progressBarContainer) progressBarContainer.style.display = 'block';
                     listenForMiniProgressBarUpdates(characterId, cardWrapper);
                 }
             });
@@ -157,56 +148,43 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Age Gate Logic ---
-    function openAgeGate() {
-        if (ageGateModal) showElement(ageGateModal); else console.error("DEBUG: ageGateModal not found to open.");
-    }
-    function closeAgeGate() {
-        if (ageGateModal) hideElement(ageGateModal); else console.error("DEBUG: ageGateModal not found to close.");
-    }
+    function openAgeGate() { if (ageGateModal) showElement(ageGateModal); else console.error("DEBUG: ageGateModal not found.");}
+    function closeAgeGate() { if (ageGateModal) hideElement(ageGateModal); else console.error("DEBUG: ageGateModal not found.");}
     function handleAgeConfirmation(confirmed) {
         closeAgeGate();
         if (confirmed) {
             isAgeVerified = true;
             localStorage.setItem(AGE_VERIFIED_STORAGE_KEY, 'true');
             enterTheIsland();
-        } else {
-            alert("Access denied. You must be 18 or older to experience The Inland Game.");
-        }
+        } else { alert("Access denied. You must be 18 or older to experience The Inland Game."); }
     }
 
     // --- Site Entry Logic ---
     function enterTheIsland() {
         if (isIslandEntered) return;
         isIslandEntered = true;
-        if (enterIslandCTA) {
-            enterIslandCTA.classList.add('button-entered');
-            enterIslandCTA.disabled = true;
-        }
+        if (enterIslandCTA) { enterIslandCTA.classList.add('button-entered'); enterIslandCTA.disabled = true; }
         if (mainContent) {
             showElement(mainContent);
             setTimeout(() => {
                 const storySection = document.getElementById('story');
                 if (storySection) {
                     storySection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    if (storyCards.length > 0) {
-                        setTimeout(() => scrollStoryCardIntoView(currentStoryCardIdx), 300);
-                    }
+                    if (storyCards.length > 0) setTimeout(() => scrollStoryCardIntoView(currentStoryCardIdx), 300);
                 }
             }, 600);
         }
     }
 
     // --- Story Card Navigation Logic ---
-    function updateStoryNavigation() { /* ... (same as your provided version) ... */ 
+    function updateStoryNavigation() {
         if (!storyPrevBtn || !storyNextBtn || !storyCardIndicator || storyCards.length === 0) return;
         storyCardIndicator.textContent = `${currentStoryCardIdx + 1} / ${storyCards.length}`;
         storyPrevBtn.disabled = currentStoryCardIdx === 0;
         storyNextBtn.disabled = currentStoryCardIdx === storyCards.length - 1;
-        if (storyCompletionMessage) {
-            storyCompletionMessage.style.display = (currentStoryCardIdx === storyCards.length - 1) ? 'block' : 'none';
-        }
+        if (storyCompletionMessage) storyCompletionMessage.style.display = (currentStoryCardIdx === storyCards.length - 1) ? 'block' : 'none';
     }
-    function scrollStoryCardIntoView(index) { /* ... (same as your provided version) ... */ 
+    function scrollStoryCardIntoView(index) {
         const cardToView = storyCards[index];
         const viewport = document.querySelector('.story-cards-viewport');
         if (cardToView && viewport) {
@@ -218,7 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Character Modal Logic ---
-    function openCharacterModal(characterId) { /* ... (same as your provided version, ensure aiChatOutput reset is good) ... */
+    function openCharacterModal(characterId) {
         currentOpenCharacterId = characterId;
         const data = characterData[characterId];
         if (!data || !characterModal) { console.error("DEBUG: Char data or modal not found for ID:", characterId); return; }
@@ -231,9 +209,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if(modalAiChatName) modalAiChatName.textContent = data.name.split(' ')[0];
         if(modalCharacterHiddenTrait) { modalCharacterHiddenTrait.textContent = data.hiddenTrait; modalCharacterHiddenTrait.style.display = 'none';}
         if(revealTraitBtn) revealTraitBtn.style.display = 'block';
-        if(aiChatOutput) { // Clear previous messages more thoroughly
+        if(aiChatOutput) {
             while(aiChatOutput.firstChild) { aiChatOutput.removeChild(aiChatOutput.firstChild); }
-            addMessageToChatOutput("[System: Connection re-established. Transmit your query.]", 'system', false, aiChatOutput); // Use specific add function
+            addMessageToChatOutput("[System: Connection re-established. Transmit your query.]", 'system', false, aiChatOutput);
         }
         if(aiChatInput) { aiChatInput.value = ''; aiChatInput.disabled = false; }
         if(aiChatSendBtn) aiChatSendBtn.disabled = false;
@@ -242,16 +220,15 @@ document.addEventListener('DOMContentLoaded', () => {
         characterModal.dataset.currentCharacterId = characterId;
         showElement(characterModal);
     }
-    function closeCharacterModal() { /* ... (same as your provided version) ... */
+    function closeCharacterModal() {
         if (!characterModal) return;
-        console.log("DEBUG: Closing character modal");
         hideElement(characterModal);
         if (characterVoteUnsubscribe) { characterVoteUnsubscribe(); characterVoteUnsubscribe = null; }
         currentOpenCharacterId = null;
     }
 
     // --- Voting Logic ---
-    async function voteForCharacter(characterId) { /* ... (same as your provided version) ... */ 
+    async function voteForCharacter(characterId) {
         if (!db) { alert("Voting system is currently unavailable."); return; }
         if (!characterId) return;
         const characterRef = db.collection('character_votes').doc(characterId);
@@ -264,7 +241,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         } catch (error) { console.error("DEBUG: Error voting for character:", characterId, error); alert("There was an error submitting your vote.");}
     }
-    function listenForCharacterVotes(characterId) { /* ... (same as your provided version) ... */ 
+    function listenForCharacterVotes(characterId) {
         if (!db || !characterId) return;
         if (characterVoteUnsubscribe) characterVoteUnsubscribe();
         const characterRef = db.collection('character_votes').doc(characterId);
@@ -275,29 +252,28 @@ document.addEventListener('DOMContentLoaded', () => {
             updateMiniProgressBarOnCard(characterId, votes);
         }, error => { console.error("DEBUG: Error in vote listener for", characterId, error); });
     }
-    function updateCharacterVoteDisplay(characterId, votes) { /* ... (same as your provided version) ... */ 
-        if (modalCharacterVoteCount && currentOpenCharacterId === characterId) { modalCharacterVoteCount.textContent = votes; }
+    function updateCharacterVoteDisplay(characterId, votes) { 
+        if (modalCharacterVoteCount && currentOpenCharacterId === characterId) modalCharacterVoteCount.textContent = votes; 
     }
-    function updateSurvivalProgressBar(characterId, votes) { /* ... (same as your provided version) ... */ 
+    function updateSurvivalProgressBar(characterId, votes) {
         const maxExpectedVotes = 100; let percentage = (votes / maxExpectedVotes) * 100;
         percentage = Math.min(Math.max(percentage, 0), 100);
-        if (modalSurvivalProgressBar && currentOpenCharacterId === characterId) { modalSurvivalProgressBar.style.width = `${percentage}%`; }
-        if (modalSurvivalPercentage && currentOpenCharacterId === characterId) { modalSurvivalPercentage.textContent = `${Math.round(percentage)}%`; }
+        if (modalSurvivalProgressBar && currentOpenCharacterId === characterId) modalSurvivalProgressBar.style.width = `${percentage}%`;
+        if (modalSurvivalPercentage && currentOpenCharacterId === characterId) modalSurvivalPercentage.textContent = `${Math.round(percentage)}%`;
     }
-    function updateMiniProgressBarOnCard(characterId, votes) { /* ... (same as your provided version) ... */ 
+    function updateMiniProgressBarOnCard(characterId, votes) {
         const cardWrapper = document.querySelector(`.character-card-wrapper[data-character-id="${characterId}"]`);
         if (cardWrapper) {
             const progressBarContainer = cardWrapper.querySelector('.character-card-progress-bar-container');
             const progressBar = cardWrapper.querySelector('.character-card-progress-bar');
             if (progressBar && progressBarContainer) {
                 const maxExpectedVotes = 100; let percentage = (votes / maxExpectedVotes) * 100;
-                percentage = Math.min(Math.max(percentage, 0), 100);
-                progressBar.style.width = `${percentage}%`;
-                if (progressBarContainer.style.display === 'none') { progressBarContainer.style.display = 'block'; }
+                percentage = Math.min(Math.max(percentage, 0), 100); progressBar.style.width = `${percentage}%`;
+                if (progressBarContainer.style.display === 'none') progressBarContainer.style.display = 'block';
             }
         }
     }
-    function listenForMiniProgressBarUpdates(characterId, cardWrapper) { /* ... (same as your provided version) ... */ 
+    function listenForMiniProgressBarUpdates(characterId, cardWrapper) {
         if (!db || !characterId || !cardWrapper) return;
         const characterRef = db.collection('character_votes').doc(characterId);
         characterRef.onSnapshot(doc => {
@@ -307,10 +283,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }, error => { console.error("DEBUG: Error in mini progress listener for", characterId, error);});
     }
 
-    // --- Character AI Chat Logic (Reusing addMessageToChatOutput & sendChatMessageToAI) ---
-    // Ensure addMessageToChatOutput and sendChatMessageToAI are defined as in your provided script
-    function addMessageToChatOutput(message, sender, isThinking = false, outputArea = aiChatOutput) { // Added outputArea param
-        if (!outputArea) return;
+    // --- AI Chat & Oracle Logic ---
+    function addMessageToChatOutput(message, sender, isThinking = false, outputArea) {
+        if (!outputArea) { console.error("DEBUG: addMessageToChatOutput called with no outputArea"); return; }
         const messageEl = document.createElement('p');
         let messageTypeClass;
         if (outputArea === aiChatOutput) { // Character Chat
@@ -319,7 +294,6 @@ document.addEventListener('DOMContentLoaded', () => {
             messageTypeClass = sender === 'user' ? 'user-query' : 'oracle-response';
         }
         messageEl.classList.add(messageTypeClass);
-
         if (isThinking) messageEl.classList.add('thinking');
         messageEl.textContent = message;
         outputArea.appendChild(messageEl);
@@ -327,14 +301,13 @@ document.addEventListener('DOMContentLoaded', () => {
         return messageEl;
     }
 
-    async function sendChatMessageToAI(characterId, userMessage, outputArea = aiChatOutput, inputEl = aiChatInput, sendBtn = aiChatSendBtn, isOracle = false) { // Added params
+    async function sendChatMessageToAI(characterId, userMessage, outputArea, inputEl, sendBtn, isOracle = false) {
         if (!userMessage.trim()) return;
         if (!characterId && !isOracle) { addMessageToChatOutput("[System Error: Character context lost.]", 'ai', false, outputArea); return; }
-        if (isOracle && !characterId) characterId = "default"; // For oracle, use default personality
+        if (isOracle && !characterId) characterId = "default";
 
         addMessageToChatOutput(isOracle ? `> ${userMessage}` : userMessage, 'user', false, outputArea);
-        if (inputEl) inputEl.value = '';
-        if (inputEl) inputEl.disabled = true;
+        if (inputEl) { inputEl.value = ''; inputEl.disabled = true; }
         if (sendBtn) sendBtn.disabled = true;
         if (isOracle && oracleStatusLight) oracleStatusLight.classList.remove('online');
 
@@ -351,9 +324,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     prompt: userMessage,
                 }),
             });
-
             if (thinkingEl) thinkingEl.remove();
-
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({ message: "Unknown server error." }));
                 throw new Error(`Server error: ${response.status}. ${errorData.message || ''}`);
@@ -366,15 +337,14 @@ document.addEventListener('DOMContentLoaded', () => {
             if (thinkingEl) thinkingEl.remove();
             addMessageToChatOutput(`[System Error: Communication failed. ${error.message}]`, isOracle ? 'system' : 'ai', false, outputArea);
         } finally {
-            if (inputEl) inputEl.disabled = false;
+            if (inputEl) { inputEl.disabled = false; inputEl.focus(); }
             if (sendBtn) sendBtn.disabled = false;
             if (isOracle && oracleStatusLight) oracleStatusLight.classList.add('online');
-            if (inputEl) inputEl.focus();
         }
     }
     
-    // --- Newsletter Form Submission (Keep existing) ---
-    if (newsletterForm) { /* ... (same as your provided version) ... */ 
+    // --- Newsletter Form Submission ---
+    if (newsletterForm) {
         newsletterForm.addEventListener('submit', async (event) => {
             event.preventDefault();
             if (newsletterSuccessMessage) newsletterSuccessMessage.style.display = 'none';
@@ -392,25 +362,21 @@ document.addEventListener('DOMContentLoaded', () => {
     } else { console.warn("DEBUG: Newsletter form not found."); }
 
     // --- Event Listeners Setup ---
-    // Hero & Age Gate
     if (enterIslandCTA) enterIslandCTA.addEventListener('click', () => { if (isAgeVerified) enterTheIsland(); else openAgeGate(); });
     if (ageConfirmYesBtn) ageConfirmYesBtn.addEventListener('click', () => handleAgeConfirmation(true));
     if (ageConfirmNoBtn) ageConfirmNoBtn.addEventListener('click', () => handleAgeConfirmation(false));
-    // Story Cards
     if (storyNextBtn) storyNextBtn.addEventListener('click', () => { if (currentStoryCardIdx < storyCards.length - 1) { currentStoryCardIdx++; scrollStoryCardIntoView(currentStoryCardIdx); updateStoryNavigation(); }});
     if (storyPrevBtn) storyPrevBtn.addEventListener('click', () => { if (currentStoryCardIdx > 0) { currentStoryCardIdx--; scrollStoryCardIntoView(currentStoryCardIdx); updateStoryNavigation(); }});
-    // Character Cards & Modal
+    
     characterCardWrappers.forEach(cardWrapper => {
         cardWrapper.addEventListener('click', (e) => {
-            const characterId = cardWrapper.dataset.characterId;
-            console.log("DEBUG: Character card wrapper clicked. ID:", characterId, "Clicked on:", e.target);
-            // Check if the click was on the button itself or directly on the card (but not on interactive elements within the back if it were visible)
-            if (e.target.closest('.character-reveal-btn') || !e.target.closest('.character-card-back')) { // Allow click on front or button
+            if (e.target.closest('button.character-reveal-btn') || !e.target.closest('.character-card-back')) {
+                 const characterId = cardWrapper.dataset.characterId;
                  if (characterId) openCharacterModal(characterId);
-                 else console.error("DEBUG: Character ID not found on card wrapper:", cardWrapper);
             }
         });
     });
+
     if (characterModalCloseBtn) characterModalCloseBtn.addEventListener('click', closeCharacterModal);
     if (revealTraitBtn) {
         revealTraitBtn.addEventListener('click', () => {
@@ -420,18 +386,18 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-    // Character Modal Interactions
     if (voteForCharacterBtn) voteForCharacterBtn.addEventListener('click', () => { if (currentOpenCharacterId) voteForCharacter(currentOpenCharacterId); });
-    if (aiChatSendBtn) aiChatSendBtn.addEventListener('click', () => { if (currentOpenCharacterId && aiChatInput) sendChatMessageToAI(currentOpenCharacterId, aiChatInput.value, aiChatOutput, aiChatInput, aiChatSendBtn, false); });
-    if (aiChatInput) aiChatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter' && currentOpenCharacterId) { e.preventDefault(); sendChatMessageToAI(currentOpenCharacterId, aiChatInput.value, aiChatOutput, aiChatInput, aiChatSendBtn, false); }});
     
-    // NEW: Island Oracle Event Listeners
+    // Character AI Chat Listeners
+    if (aiChatSendBtn) aiChatSendBtn.addEventListener('click', () => { if (currentOpenCharacterId && aiChatInput) sendChatMessageToAI(currentOpenCharacterId, aiChatInput.value, aiChatOutput, aiChatInput, aiChatSendBtn, false); });
+    if (aiChatInput) aiChatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter' && !e.shiftKey && currentOpenCharacterId) { e.preventDefault(); sendChatMessageToAI(currentOpenCharacterId, aiChatInput.value, aiChatOutput, aiChatInput, aiChatSendBtn, false); }});
+    
+    // Island Oracle Listeners
     if (oracleChatSendBtn) {
         oracleChatSendBtn.addEventListener('click', () => {
             if (oracleChatInput) sendChatMessageToAI("default", oracleChatInput.value, oracleChatOutput, oracleChatInput, oracleChatSendBtn, true);
         });
     } else { console.warn("DEBUG: Oracle chat send button not found."); }
-
     if (oracleChatInput) {
         oracleChatInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
