@@ -41,7 +41,15 @@
 </head>
 <body class="preload">
 
-    <div class="global-texture-overlay"></div>
+    <div class="global-texture-overlay animated-texture"></div>
+
+    <audio id="ambient-audio" loop>
+        <source src="assets/audio/ambient-loop.mp3" type="audio/mpeg"> 
+        Your browser does not support the audio element.
+    </audio>
+    <button id="toggle-audio-btn" class="audio-toggle-btn" aria-label="Toggle Ambient Sound">
+        <i class="fas fa-volume-mute"></i>
+    </button>
 
     <header id="hero" class="hero-section">
         <video autoplay muted loop playsinline id="hero-bg-video">
@@ -61,7 +69,6 @@
     </header>
 
     <main id="main-content">
-        <!-- Story Section -->
         <section id="story" class="story-section">
             <h2 class="section-title story-title">Fragments of Truth</h2>
             <div class="story-cards-viewport">
@@ -85,84 +92,22 @@
             </div>
         </section>
 
-        <!-- Meet the Characters Section -->
         <section id="characters" class="characters-section">
             <h2 class="section-title characters-title">The Contenders</h2>
             <div class="characters-grid">
-                <!-- Aiden Cross -->
-                <div class="character-card-wrapper" data-character-id="aiden-cross">
-                    <div class="character-card">
-                        <div class="character-card-front"><img src="assets/images/characters/aiden_cross.jpg" alt="Aiden Cross" class="character-portrait"><h3 class="character-name-preview">Aiden Cross</h3></div>
-                        <div class="character-card-back"><h3 class="character-name-detail">Aiden Cross</h3><p class="character-archetype">The Strategic Player</p><div class="character-card-progress-bar-container"><div class="character-card-progress-bar" style="width: 0%;"></div></div><button class="character-reveal-btn">View Dossier</button></div>
-                    </div>
-                </div>
-                <!-- Selene Ward -->
-                <div class="character-card-wrapper" data-character-id="selene-ward">
-                    <div class="character-card">
-                        <div class="character-card-front"><img src="assets/images/characters/selene_ward.jpg" alt="Selene Ward" class="character-portrait"><h3 class="character-name-preview">Selene Ward</h3></div>
-                        <div class="character-card-back"><h3 class="character-name-detail">Selene Ward</h3><p class="character-archetype">The Silent Survivor</p><div class="character-card-progress-bar-container"><div class="character-card-progress-bar" style="width: 0%;"></div></div><button class="character-reveal-btn">View Dossier</button></div>
-                    </div>
-                </div>
-                <!-- Darius Cole -->
-                <div class="character-card-wrapper" data-character-id="darius-cole">
-                    <div class="character-card">
-                        <div class="character-card-front"><img src="assets/images/characters/darius_cole.jpg" alt="Darius Cole" class="character-portrait"><h3 class="character-name-preview">Darius Cole</h3></div>
-                        <div class="character-card-back"><h3 class="character-name-detail">Darius Cole</h3><p class="character-archetype">The Ex-Soldier</p><div class="character-card-progress-bar-container"><div class="character-card-progress-bar" style="width: 0%;"></div></div><button class="character-reveal-btn">View Dossier</button></div>
-                    </div>
-                </div>
-                <!-- Nina Reyes -->
-                <div class="character-card-wrapper" data-character-id="nina-reyes">
-                    <div class="character-card">
-                        <div class="character-card-front"><img src="assets/images/characters/nina_reyes.jpg" alt="Nina Reyes" class="character-portrait"><h3 class="character-name-preview">Nina Reyes</h3></div>
-                        <div class="character-card-back"><h3 class="character-name-detail">Nina Reyes</h3><p class="character-archetype">The Game Theorist</p><div class="character-card-progress-bar-container"><div class="character-card-progress-bar" style="width: 0%;"></div></div><button class="character-reveal-btn">View Dossier</button></div>
-                    </div>
-                </div>
-                <!-- Elara Vance -->
-                <div class="character-card-wrapper" data-character-id="elara-vance">
-                    <div class="character-card">
-                        <div class="character-card-front"><img src="assets/images/characters/elara_vance.jpg" alt="Elara Vance" class="character-portrait"><h3 class="character-name-preview">Elara Vance</h3></div>
-                        <div class="character-card-back"><h3 class="character-name-detail">Elara Vance</h3><p class="character-archetype">The Ethereal Wildcard</p><div class="character-card-progress-bar-container"><div class="character-card-progress-bar" style="width: 0%;"></div></div><button class="character-reveal-btn">View Dossier</button></div>
-                    </div>
-                </div>
-                <!-- Kenji Tanaka -->
-                <div class="character-card-wrapper" data-character-id="kenji-tanaka">
-                    <div class="character-card">
-                        <div class="character-card-front"><img src="assets/images/characters/kenji_tanaka.jpg" alt="Kenji Tanaka" class="character-portrait"><h3 class="character-name-preview">Kenji Tanaka</h3></div>
-                        <div class="character-card-back"><h3 class="character-name-detail">Kenji Tanaka</h3><p class="character-archetype">The Quiet Technician</p><div class="character-card-progress-bar-container"><div class="character-card-progress-bar" style="width: 0%;"></div></div><button class="character-reveal-btn">View Dossier</button></div>
-                    </div>
-                </div>
-                <!-- Isabelle Moreau -->
-                <div class="character-card-wrapper" data-character-id="isabelle-moreau">
-                    <div class="character-card">
-                        <div class="character-card-front"><img src="assets/images/characters/isabelle_moreau.jpg" alt="Isabelle Moreau" class="character-portrait"><h3 class="character-name-preview">Isabelle Moreau</h3></div>
-                        <div class="character-card-back"><h3 class="character-name-detail">Isabelle Moreau</h3><p class="character-archetype">The Idealistic Leader</p><div class="character-card-progress-bar-container"><div class="character-card-progress-bar" style="width: 0%;"></div></div><button class="character-reveal-btn">View Dossier</button></div>
-                    </div>
-                </div>
-                <!-- Chloe 'Glitch' Kim -->
-                <div class="character-card-wrapper" data-character-id="chloe-kim">
-                    <div class="character-card">
-                        <div class="character-card-front"><img src="assets/images/characters/chloe_kim.jpg" alt="Chloe Kim" class="character-portrait"><h3 class="character-name-preview">Chloe 'Glitch' Kim</h3></div>
-                        <div class="character-card-back"><h3 class="character-name-detail">Chloe 'Glitch' Kim</h3><p class="character-archetype">The Hacker</p><div class="character-card-progress-bar-container"><div class="character-card-progress-bar" style="width: 0%;"></div></div><button class="character-reveal-btn">View Dossier</button></div>
-                    </div>
-                </div>
-                <!-- Marcus Thorne -->
-                <div class="character-card-wrapper" data-character-id="marcus-thorne">
-                    <div class="character-card">
-                        <div class="character-card-front"><img src="assets/images/characters/marcus_thorne.jpg" alt="Marcus Thorne" class="character-portrait"><h3 class="character-name-preview">Marcus Thorne</h3></div>
-                        <div class="character-card-back"><h3 class="character-name-detail">Marcus Thorne</h3><p class="character-archetype">The Desperate Father</p><div class="character-card-progress-bar-container"><div class="character-card-progress-bar" style="width: 0%;"></div></div><button class="character-reveal-btn">View Dossier</button></div>
-                    </div>
-                </div>
-                <!-- The Masked Enforcer -->
-                <div class="character-card-wrapper" data-character-id="masked-enforcer">
-                    <div class="character-card">
-                        <div class="character-card-front"><img src="assets/images/characters/masked_enforcer.jpg" alt="The Masked Enforcer" class="character-portrait"><h3 class="character-name-preview">The Masked Enforcer</h3></div>
-                        <div class="character-card-back"><h3 class="character-name-detail">The Masked Enforcer</h3><p class="character-archetype">The Enigma</p><div class="character-card-progress-bar-container"><div class="character-card-progress-bar" style="width: 0%;"></div></div><button class="character-reveal-btn">View Dossier</button></div>
-                    </div>
-                </div>
+                <div class="character-card-wrapper" data-character-id="aiden-cross"><div class="character-card anim-on-scroll"><div class="character-card-front"><img src="assets/images/characters/aiden_cross.jpg" alt="Aiden Cross" class="character-portrait"><h3 class="character-name-preview">Aiden Cross</h3></div><div class="character-card-back"><h3 class="character-name-detail">Aiden Cross</h3><p class="character-archetype">The Strategic Player</p><div class="character-card-progress-bar-container"><div class="character-card-progress-bar"></div></div><button class="character-reveal-btn">View Dossier</button></div></div></div>
+                <div class="character-card-wrapper" data-character-id="selene-ward"><div class="character-card anim-on-scroll"><div class="character-card-front"><img src="assets/images/characters/selene_ward.jpg" alt="Selene Ward" class="character-portrait"><h3 class="character-name-preview">Selene Ward</h3></div><div class="character-card-back"><h3 class="character-name-detail">Selene Ward</h3><p class="character-archetype">The Silent Survivor</p><div class="character-card-progress-bar-container"><div class="character-card-progress-bar"></div></div><button class="character-reveal-btn">View Dossier</button></div></div></div>
+                <div class="character-card-wrapper" data-character-id="darius-cole"><div class="character-card anim-on-scroll"><div class="character-card-front"><img src="assets/images/characters/darius_cole.jpg" alt="Darius Cole" class="character-portrait"><h3 class="character-name-preview">Darius Cole</h3></div><div class="character-card-back"><h3 class="character-name-detail">Darius Cole</h3><p class="character-archetype">The Ex-Soldier</p><div class="character-card-progress-bar-container"><div class="character-card-progress-bar"></div></div><button class="character-reveal-btn">View Dossier</button></div></div></div>
+                <div class="character-card-wrapper" data-character-id="nina-reyes"><div class="character-card anim-on-scroll"><div class="character-card-front"><img src="assets/images/characters/nina_reyes.jpg" alt="Nina Reyes" class="character-portrait"><h3 class="character-name-preview">Nina Reyes</h3></div><div class="character-card-back"><h3 class="character-name-detail">Nina Reyes</h3><p class="character-archetype">The Game Theorist</p><div class="character-card-progress-bar-container"><div class="character-card-progress-bar"></div></div><button class="character-reveal-btn">View Dossier</button></div></div></div>
+                <div class="character-card-wrapper" data-character-id="elara-vance"><div class="character-card anim-on-scroll"><div class="character-card-front"><img src="assets/images/characters/elara_vance.jpg" alt="Elara Vance" class="character-portrait"><h3 class="character-name-preview">Elara Vance</h3></div><div class="character-card-back"><h3 class="character-name-detail">Elara Vance</h3><p class="character-archetype">The Ethereal Wildcard</p><div class="character-card-progress-bar-container"><div class="character-card-progress-bar"></div></div><button class="character-reveal-btn">View Dossier</button></div></div></div>
+                <div class="character-card-wrapper" data-character-id="kenji-tanaka"><div class="character-card anim-on-scroll"><div class="character-card-front"><img src="assets/images/characters/kenji_tanaka.jpg" alt="Kenji Tanaka" class="character-portrait"><h3 class="character-name-preview">Kenji Tanaka</h3></div><div class="character-card-back"><h3 class="character-name-detail">Kenji Tanaka</h3><p class="character-archetype">The Quiet Technician</p><div class="character-card-progress-bar-container"><div class="character-card-progress-bar"></div></div><button class="character-reveal-btn">View Dossier</button></div></div></div>
+                <div class="character-card-wrapper" data-character-id="isabelle-moreau"><div class="character-card anim-on-scroll"><div class="character-card-front"><img src="assets/images/characters/isabelle_moreau.jpg" alt="Isabelle Moreau" class="character-portrait"><h3 class="character-name-preview">Isabelle Moreau</h3></div><div class="character-card-back"><h3 class="character-name-detail">Isabelle Moreau</h3><p class="character-archetype">The Idealistic Leader</p><div class="character-card-progress-bar-container"><div class="character-card-progress-bar"></div></div><button class="character-reveal-btn">View Dossier</button></div></div></div>
+                <div class="character-card-wrapper" data-character-id="chloe-kim"><div class="character-card anim-on-scroll"><div class="character-card-front"><img src="assets/images/characters/chloe_kim.jpg" alt="Chloe Kim" class="character-portrait"><h3 class="character-name-preview">Chloe 'Glitch' Kim</h3></div><div class="character-card-back"><h3 class="character-name-detail">Chloe 'Glitch' Kim</h3><p class="character-archetype">The Hacker</p><div class="character-card-progress-bar-container"><div class="character-card-progress-bar"></div></div><button class="character-reveal-btn">View Dossier</button></div></div></div>
+                <div class="character-card-wrapper" data-character-id="marcus-thorne"><div class="character-card anim-on-scroll"><div class="character-card-front"><img src="assets/images/characters/marcus_thorne.jpg" alt="Marcus Thorne" class="character-portrait"><h3 class="character-name-preview">Marcus Thorne</h3></div><div class="character-card-back"><h3 class="character-name-detail">Marcus Thorne</h3><p class="character-archetype">The Desperate Father</p><div class="character-card-progress-bar-container"><div class="character-card-progress-bar"></div></div><button class="character-reveal-btn">View Dossier</button></div></div></div>
+                <div class="character-card-wrapper" data-character-id="masked-enforcer"><div class="character-card anim-on-scroll"><div class="character-card-front"><img src="assets/images/characters/masked_enforcer.jpg" alt="The Masked Enforcer" class="character-portrait"><h3 class="character-name-preview">The Masked Enforcer</h3></div><div class="character-card-back"><h3 class="character-name-detail">The Masked Enforcer</h3><p class="character-archetype">The Enigma</p><div class="character-card-progress-bar-container"><div class="character-card-progress-bar"></div></div><button class="character-reveal-btn">View Dossier</button></div></div></div>
             </div> 
         </section>
 
-        <!-- Character Detail Modal -->
         <div id="character-modal" class="modal-overlay-container character-detail-modal">
             <div class="modal-content-box character-modal-content">
                 <button id="character-modal-close-btn" class="modal-close-btn" aria-label="Close character details">×</button>
@@ -202,13 +147,12 @@
             </div>
         </div>
 
-        <!-- Token Section -->
         <section id="token" class="content-section token-section">
             <div class="token-section-overlay"></div>
             <h2 class="section-title token-title">Fueling The Game</h2>
             <div class="token-container">
                 <div class="token-visual-area">
-                    <img src="assets/images/token-inld-coin.png" alt="INLD Token Coin" class="token-coin-image">
+                    <img src="assets/images/logo.png" alt="INLD Token Coin" class="token-coin-image">
                 </div>
                 <div class="token-details-area">
                     <h3 class="token-name">INLD TOKEN <span class="token-ticker">($INLD)</span></h3>
@@ -223,7 +167,7 @@
                         <li><i class="fas fa-ticket-alt token-icon"></i> Early Access & Whitelists for Future NFT Drops</li>
                         <li><i class="fas fa-users-cog token-icon"></i> Future Governance & Story Influence (TBD)</li>
                     </ul>
-                    <a href="YOUR_PUMP_FUN_TOKEN_LINK_HERE" target="_blank" rel="noopener noreferrer" class="cta-button buy-token-btn">
+                    <a href="https://pump.fun/coin/5AJrawGnQSz7A8tiZpP46JzzDWALniMzzxWMfVWKpump?include-nsfw=true" target="_blank" rel="noopener noreferrer" class="cta-button buy-token-btn">
                         <i class="fas fa-shopping-cart"></i> Get $INLD on Pump.fun
                     </a>
                     <div class="token-data-widgets" style="display: none; margin-top: 1.5rem; font-size: 0.9rem; opacity: 0.7;">
@@ -238,7 +182,6 @@
             </p>
         </section>
 
-        <!-- Island Oracle Section -->
         <section id="island-oracle" class="content-section oracle-section">
             <div class="oracle-console-border">
                 <div class="oracle-console">
@@ -255,6 +198,7 @@
                     <div class="oracle-chat-input-area">
                         <span class="oracle-prompt-indicator">>_</span>
                         <textarea id="oracle-chat-input" placeholder="Transmit your query to the island..." rows="1"></textarea>
+                        <span id="oracle-cursor" class="blinking-cursor">_</span>
                         <button id="oracle-chat-send-btn" class="oracle-send-button" aria-label="Send Query">
                             <i class="fas fa-paper-plane"></i> SEND
                         </button>
@@ -263,13 +207,12 @@
             </div>
         </section>
 
-        <!-- Newsletter Sign-Up Section -->
-        <section id="newsletter" class="content-section newsletter-section">
+        <!--section id="newsletter" class="content-section newsletter-section">
             <h2 class="section-title">Want Inside Access?</h2>
             <p class="newsletter-tagline">Join the Players’ Circle to get early clues, exclusive content drops, and AI-lore before anyone else. Don't just watch the game, become a part of its unfolding secrets.</p>
             <form name="newsletter-signup" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="newsletter-form">
                 <input type="hidden" name="form-name" value="newsletter-signup">
-                <p class="hidden-field" style="display:none;">
+                <p class="hidden-field">
                     <label>Don’t fill this out if you’re human: <input name="bot-field"></label>
                 </p>
                 <div class="form-group">
@@ -288,10 +231,9 @@
             <div id="newsletter-error-message" class="form-error-message" style="display:none;">
                 Oops! Something went wrong. Please try again.
             </div>
-        </section>
+        </section-->
     </main>
 
-    <!-- Age Gate Modal -->
     <div id="age-gate-modal" class="modal-overlay-container">
         <div class="modal-content-box">
             <h2 class="modal-title-text">Confirm Your Descent</h2>
@@ -303,21 +245,19 @@
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer id="site-footer" class="content-section"> <!-- Added content-section for consistent padding/border if desired -->
+    <footer id="site-footer" class="content-section"> 
         <div class="footer-content-wrapper">
             <div class="social-icons">
-                <a href="YOUR_X_LINK_HERE" target="_blank" rel="noopener noreferrer" aria-label="Follow on X"><i class="fab fa-twitter"></i></a>
-                <a href="YOUR_TELEGRAM_LINK_HERE" target="_blank" rel="noopener noreferrer" aria-label="Join on Telegram"><i class="fab fa-telegram-plane"></i></a>
-                <a href="YOUR_INSTAGRAM_LINK_HERE" target="_blank" rel="noopener noreferrer" aria-label="Follow on Instagram"><i class="fab fa-instagram"></i></a>
-                <a href="YOUR_YOUTUBE_LINK_HERE" target="_blank" rel="noopener noreferrer" aria-label="Subscribe on YouTube"><i class="fab fa-youtube"></i></a>
+                <a href="https://x.com/theinlandgame" target="_blank" rel="noopener noreferrer" aria-label="Follow on X (Twitter)"><i class="fab fa-twitter"></i></a>
+                <a href="https://t.me/theinlandgame" target="_blank" rel="noopener noreferrer" aria-label="Join on Telegram"><i class="fab fa-telegram-plane"></i></a>
+                <a href="https://www.instagram.com/theinlandgame/" target="_blank" rel="noopener noreferrer" aria-label="Follow on Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.youtube.com/@TheInlandGame" target="_blank" rel="noopener noreferrer" aria-label="Subscribe on YouTube"><i class="fab fa-youtube"></i></a>
             </div>
             <div class="footer-links">
-                <a href="#privacy">Privacy Policy</a> | <a href="#terms">Terms of Service</a> | <a href="#contact">Contact</a>
+                <a href="privacy-policy.html">Privacy Policy</a> | <a href="terms-of-service.html">Terms of Service</a>
             </div>
             <p class="copyright-text">© <span id="current-year"></span> The Inland Game. All Rights Reserved.</p>
-            <!-- Optional: Pump.fun badge if they provide one, or just a text link -->
-            <p class="pumpfun-link"><a href="YOUR_PUMP_FUN_TOKEN_LINK_HERE_AGAIN" target="_blank" rel="noopener noreferrer">INLD on Pump.fun</a></p>
+            <p class="pumpfun-link"><a href="https://pump.fun/coin/5AJrawGnQSz7A8tiZpP46JzzDWALniMzzxWMfVWKpump?include-nsfw=true" target="_blank" rel="noopener noreferrer">INLD on Pump.fun</a></p>
         </div>
     </footer>
 
